@@ -1,0 +1,22 @@
+.pro_content{
+	position: relative;
+	box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+	margin-top: 15px;
+	padding: 30px;
+	border-radius: 5px;
+	background: #fff;
+	transition: 0.5s;
+}
+.pro_content .pic{
+	width: 180px;
+}
+.pro_content .pic img {
+	transition: ease-in-out 0.3s;
+}
+.pro_content .pro_text{
+	padding-left: 30px;
+}
+.pro_content .pro_text p{
+	margin: 10px 0 0 0;
+	font-size: 14px;
+}
