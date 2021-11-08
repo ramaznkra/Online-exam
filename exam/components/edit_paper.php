@@ -11,9 +11,14 @@
       $paper_duration = mysqli_real_escape_string($link, $_POST["paper_duration"]);
       $start_date = mysqli_real_escape_string($link, $_POST["start_date"]);
       $end_date = mysqli_real_escape_string($link, $_POST["end_date"]);
-      $questions = mysqli_real_escape_string($link, $_POST["questions"]);
+  
+      $questionIds =($_POST["questionIds"]);
+      $chk = "";
+      foreach ($questionIds as $questionIdsResult){
+        $chk.=$questionIdsResult.",";
+      }
 
-      $sql = "UPDATE papers SET paper_name = '$paper_name', min_pass_score = '$min_pass_score', mark_per_question = '$mark_per_question', paper_duration = '$paper_duration', start_date = '$start_date', end_date = '$end_date', questions = '$questions'  WHERE paper_id=$_POST[id2]";
+      $sql = "UPDATE papers SET paper_name = '$paper_name', min_pass_score = '$min_pass_score', mark_per_question = '$mark_per_question', paper_duration = '$paper_duration', start_date = '$start_date', end_date = '$end_date', questions = '$chk'  WHERE paper_id=$_POST[id2]";
       $result =mysqli_query($link,$sql);
       if($result){
          echo "<script>alert('Başarıyla güncellendi')</script>";
@@ -95,8 +100,6 @@
                     </thead>
                     <tbody>
                         <?php
-
-
                             $records = mysqli_query ($link,"SELECT question_id, question, correct_answer FROM questions");
                             if($records -> num_rows >0){
                                 while($row = mysqli_fetch_array($records)){
@@ -110,7 +113,6 @@
                                         $letter_answer = "D";
                                     } else{$letter_answer = "E";}
                                     $temp= $row['question_id'];
-
                         ?>
                         <tr>
                             <td><?php echo $row['question_id']; ?></td>
@@ -118,17 +120,12 @@
                             <td><?php echo $letter_answer; ?></td>
                             <td>
                               <input type="checkbox"
-                                        value="<?php echo $row['question_id']; ?>"
-                                        name="questionIds[]"
-                              <?php
-                                        for($i=0; $i < count($questions_chk); $i++){
-                                        }
-                                                              ?>
+                                    value="<?php echo $row['question_id']; ?>"
+                                    name="questionIds[]"
+                                    <?php echo (in_array($temp,$questions_chk,TRUE)) ? 'checked="checked"' : ''; ?>
                                 />
                             </td>
-
                         <?php
-
                                 }
                         }else{echo "Hiç soru bulunamadı."; }
                         $link -> close();
