@@ -1,9 +1,9 @@
-<?php 
+<?php
     include_once 'sidebar.php';
     $paper_id = $_GET['paperid'];
     $email = $password = "";
     $email_err = $password_err = $login_err = "";
-    
+
     if(isset($_POST["enter"])){
         if(isset($_POST["kvkk"])){
             echo "<script>alert('checked')</script>";
@@ -24,11 +24,11 @@
             //echo "<script>alert('Lütfen KVKK metnini okuyup onaylayınız.')</script>";
         }
     }
-    
+
 ?>
 <div class="content">
     <section>
-    <p><?php echo "Öğrenci id: ".$_SESSION["second_id"];echo "paper id: ".$paper_id?></p>
+  <!--  <p><?php // echo "Öğrenci id: ".$_SESSION["second_id"];echo "paper id: ".$paper_id?></p> -->
         <div class="container mt-5">
             <form class="needs-validation" novalidate method="POST" action="<?php htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="form-group">
@@ -53,26 +53,26 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    
+
                 </div>
                 <div class="form-group">
-                    
+
                     <button type="submit" name="enter" class="btn btn-primary">Sınava Giriş</button>
                 </div>
             </form>
-            <button type="submit" name="face" class="btn btn-primary" onClick="take_snapshot()">Fotoğraf Çek</button>
+          <!--  <button type="submit" name="face" class="btn btn-primary" onClick="take_snapshot()">Fotoğraf Çek</button>
             <div class="form-group mt-5 d-flex">
                 <div id="my_camera" class="mr-5"></div>
                 <div id="results"></div>
             </div>
-        </div>
-        
+        </div> -->
+
     </section>
 </div>
 
 
 
-<script type="text/javascript" src="../webcamjs/webcam.js"></script>
+<!-- <script type="text/javascript" src="../webcamjs/webcam.js"></script>
 <script>
     //cam
     Webcam.set({
@@ -82,17 +82,17 @@
 		jpeg_quality: 90
 	});
 	Webcam.attach( '#my_camera' );
-		
+
 
 	// preload shutter audio clip
-		
+
 
 	function take_snapshot() {
-			
+
 		// take snapshot and get image data
 		Webcam.snap( function(data_uri) {
 			// display results in page
-			document.getElementById('results').innerHTML = 
+			document.getElementById('results').innerHTML =
 				'<img id="imageprev" src="'+data_uri+'" name="imageData"/>';
 		} );
         saveSnap();
@@ -134,4 +134,4 @@
       }, false)
     })
 })()
-</script>
+</script> -->

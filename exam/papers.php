@@ -5,22 +5,41 @@
     $us_cat = $_SESSION['userCategory'];
 
     $paper_name = $min_pass_score = $mark_per_question = $paper_duration = $start_date = $end_date = $category ="";
-    if(isset($_POST["submit"])){
-        $paper_name = trim($_POST["paper_name"]);
-        $min_pass_score = trim($_POST["min_pass_score"]);
-        $mark_per_question = trim ($_POST["mark_per_question"]);
-        $paper_duration = trim($_POST["paper_duration"]);
-        $start_date = trim($_POST["start_date"]);
-        $end_date = trim ($_POST["end_date"]);
-        $questionIds =($_POST["questionIds"]);
+    $start_date_err = $end_date_err = $chk_err = "";
 
-        $chk = "";
-        foreach ($questionIds as $questionIdsResult){
-          $chk.=$questionIdsResult.",";
+      if(isset($_POST["submit"])){
+          $paper_name = trim($_POST["paper_name"]);
+          $min_pass_score = trim($_POST["min_pass_score"]);
+          $mark_per_question = trim ($_POST["mark_per_question"]);
+          $paper_duration = trim($_POST["paper_duration"]);
+          $start_date = trim($_POST["start_date"]);
+          $end_date = trim ($_POST["end_date"]);
+          $questionIds =($_POST["questionIds"]);
+
+          $chk = "";
+          foreach ($questionIds as $questionIdsResult){
+            $chk.=$questionIdsResult.",";
+          }
+
+          if($start_date == "0000-00-00" || empty(trim("$end_date"))){
+             $start_date_err = "Başlangıç zamanı boş bırakılamaz.";
+          }else if($start_date >= $end_date){
+              $start_date_err = "Başlangıç zamanı bitiş zamanından büyük veya eşit olamaz.";
+          }else{
+             $start_date;
+          }
+
+          if(empty(trim("$end_date"))){
+             $end_date_err = "Bitiş zamanı boş bırakılamaz.";
+          }else{
+             $end_date;
+          }
+
+          if(empty($start_date_err) && empty($chk_err)){
+            $sql = "INSERT INTO papers (paper_name, min_pass_score, mark_per_question, paper_duration, start_date,end_date,questions) VALUES ('$paper_name', '$min_pass_score','$mark_per_question','$paper_duration','$start_date','$end_date','$chk')";
+            mysqli_query($link, $sql);
+          }
         }
-        $sql = "INSERT INTO papers (paper_name, min_pass_score, mark_per_question, paper_duration, start_date,end_date,questions) VALUES ('$paper_name', '$min_pass_score','$mark_per_question','$paper_duration','$start_date','$end_date','$chk')";
-        mysqli_query($link, $sql);
-    }
 
       $categories = explode(",", $us_cat);
 ?>
@@ -48,7 +67,6 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Kağıt Adı</th>
                                 <th scope="col">Sınav Süresi (dk)</th>
                                 <th scope="col">Başlama Tarihi</th>
@@ -60,17 +78,16 @@
                         <tbody>
                             <?php
 
-                                $result = mysqli_query($link, "SELECT paper_id, paper_name, paper_duration, start_date, end_date FROM papers");
+                                $result = mysqli_query($link, "SELECT paper_id,paper_name, paper_duration, start_date, end_date FROM papers");
                                 if($result -> num_rows > 0){
                                     while($row = mysqli_fetch_array($result)){
                                         $temp=$row['paper_id'];
                             ?>
                                 <tr>
-                                    <td><?php echo $row['paper_id'];?></td>
                                     <td><?php echo $row['paper_name'];?></td>
                                     <td><?php echo $row['paper_duration'];?></td>
-                                    <td><?php echo $row['start_date']; ?></td>
-                                    <td><?php echo $row['end_date']; ?></td>
+                                    <td><?php echo date("Y-m-d H:i",strtotime($row["start_date"])); ?></td>
+                                    <td><?php echo  date("Y-m-d H:i",strtotime($row['end_date'])); ?></td>
 
                                     <td>
                                         <a class="btn btn-primary" href="./components/edit_paper.php?paperid=<?php echo $temp; ?>">Düzenle</a>
@@ -91,7 +108,7 @@
                 <div id="menu1" class="container tab-pane fade">
                     <br>
                     <h4>Yeni Kağıt</h4>
-                    <form method="post" id="paper" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                      <form method="post" id="paper" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -114,7 +131,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="start_date">Başlama Zamanı:</label>
-                                    <input type="datetime-local" id="picker"class="form-control form-control-sm" name="start_date">
+                                    <input type="datetime-local" id="picker"class="form-control form-control-sm <?php echo (!empty($start_date_err)) ? 'is-invalid' : ''; ?>" name="start_date">
+                                    <div class="invalid-feedback"><?php echo $start_date_err; ?></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="end_date">Bitiş Zamanı:</label>
@@ -124,51 +142,41 @@
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary mb-5" name="submit" type="submit">Oluştur</button>
+
                         </div>
                         <div class="form-group">
                             <p>Lütfen eklemek istediğiniz soruları seçiniz.</p>
-                                <select name="Category">
-                                    <option value="" disabled selected>Ders Seçiniz</option>
-                                    <?php
-                                      $i=0;
-                                      for($i; $i<count($categories); $i++){
-                                        echo "<option value='$categories[$i]'>";
-                                        echo $categories[$i];
-                                        echo "</option>";
-                                        $records = mysqli_query ($link,"SELECT question_id, question, correct_answer FROM questions WHERE category ='$categories[$i]'");
-                                      }
-                                    ?>
 
-                              </select>
                             <div class="mt-3" id="list_question" style="heigth=auto;">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
                                             <th scope="col">Soru</th>
                                             <th scope="col">Cevabı</th>
+                                            <th scope="col">Kategori</th>
                                             <th scope="col">İşlemler</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-
-
+                                      <?php
+                                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions");
                                             if($records -> num_rows >0){
                                                 while($row = mysqli_fetch_array($records)){
-                                                    if($row["correct_answer"]==0){
-                                                        $letter_answer = "A";
-                                                    }else if($row["correct_answer"]==1){
-                                                        $letter_answer = "B";
-                                                    }else if($row["correct_answer"]==2){
-                                                        $letter_answer = "C";
-                                                    }else{$letter_answer = "D";}
+                                                  if($row["correct_answer"]==0){
+                                                      $letter_answer = "A";
+                                                  }else if($row["correct_answer"]==1){
+                                                      $letter_answer = "B";
+                                                  }else if($row["correct_answer"]==2){
+                                                      $letter_answer = "C";
+                                                  }else if($row["correct_answer"]==3){
+                                                      $letter_answer = "D";
+                                                  } else{$letter_answer = "E";}
 
                                         ?>
                                         <tr>
-                                            <td><?php echo $row['question_id']; ?></td>
                                             <td><?php echo $row['question']; ?></td>
                                             <td><?php echo $letter_answer; ?></td>
+                                            <td><?php echo $row['category']; ?></td>
                                             <td>
                                               <input type="checkbox"
                                                         value="<?php echo $row['question_id']; ?>"

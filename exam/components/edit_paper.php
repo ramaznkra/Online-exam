@@ -3,7 +3,7 @@
    include_once "./sidebar.php";
    $id = $_GET['paperid'];
    if (isset($_POST["edit"])){
-      $paper_name = $min_pass_score = $mark_per_question = $paper_duration = $start_date = $end_date = "";
+     $paper_name = $min_pass_score = $mark_per_question = $paper_duration = $start_date = $end_date = "";
 
       $paper_name = mysqli_real_escape_string($link, $_POST["paper_name"]);
       $min_pass_score = mysqli_real_escape_string($link, $_POST["min_pass_score"]);
@@ -11,8 +11,9 @@
       $paper_duration = mysqli_real_escape_string($link, $_POST["paper_duration"]);
       $start_date = mysqli_real_escape_string($link, $_POST["start_date"]);
       $end_date = mysqli_real_escape_string($link, $_POST["end_date"]);
+      $questions = mysqli_real_escape_string($link, $_POST["questions"]);
 
-      $sql = "UPDATE papers SET paper_name = '$paper_name', min_pass_score = '$min_pass_score', mark_per_question = '$mark_per_question', paper_duration = '$paper_duration', start_date = '$start_date', end_date = '$end_date' WHERE paper_id=$_POST[id2]";
+      $sql = "UPDATE papers SET paper_name = '$paper_name', min_pass_score = '$min_pass_score', mark_per_question = '$mark_per_question', paper_duration = '$paper_duration', start_date = '$start_date', end_date = '$end_date', questions = '$questions'  WHERE paper_id=$_POST[id2]";
       $result =mysqli_query($link,$sql);
       if($result){
          echo "<script>alert('Başarıyla güncellendi')</script>";
@@ -23,6 +24,8 @@
      header("location: ../papers.php");
 
    }
+
+
 
 ?>
 <div class="content pt-3">
@@ -37,10 +40,12 @@
                     $min_pass_score = $row["min_pass_score"];
                     $mark_per_question = $row["mark_per_question"];
                     $paper_duration = $row["paper_duration"];
-                    $start_date2 = date("d-m-Y H:i:s",strtotime($row["start_date"]));
-                    $end_date2 = date("d-m-Y H:i:s",strtotime($row["end_date"]));
-
+                    $start_date2  = date("Y-m-d\TH:i",strtotime($row["start_date"]));
+                    $end_date2 = date("Y-m-d\TH:i",strtotime($row["end_date"]));
+                    $questions = $row["questions"];
                }
+                    $questions_chk = explode(",", $questions);
+
          ?>
          <div class="row">
             <div class="col">
@@ -65,20 +70,19 @@
                </div>
                <div class="form-group">
                   <label for="start_date">Başlama Tarihi ve Zamanı:</label>
-                  <label><?php echo $start_date2; ?></label>
-                  <input type="datetime-local" class="form-control form-control-sm" name="start_date" value="20-07-2021 02:00">
+                  <input type="datetime-local" class="form-control form-control-sm" name="start_date" value="<?php echo $start_date2; ?>">
 
                </div>
                <div class="form-group">
                   <label for="end_date">Bitiş Tarihi ve Zamanı:</label>
-                  <label><?php echo $end_date2; ?></label>
-                  <input type="datetime-local" class="form-control form-control-sm" name="end_date" value="<?php echo $end_date; ?>">
+                  <input type="datetime-local" class="form-control form-control-sm" name="end_date" value="<?php echo $end_date2; ?>">
                </div>
             </div>
          </div>
          <div class="form-group">
-            <p>Lütfen eklemek istediğiniz soruları seçiniz.</p>
-            <button class="btn btn-primary" name="select">Soru Seç</button>
+            <p>Eklemek istediğiniz soruları seçerek kaydet butonuna basınız.</p>
+
+              <button class="btn btn-primary" name="edit" type="submit">Kaydet</button>
             <div class="mt-3" id="list_question" style="heigth=auto;">
                 <table class="table table-striped">
                     <thead>
@@ -92,6 +96,7 @@
                     <tbody>
                         <?php
 
+
                             $records = mysqli_query ($link,"SELECT question_id, question, correct_answer FROM questions");
                             if($records -> num_rows >0){
                                 while($row = mysqli_fetch_array($records)){
@@ -101,16 +106,27 @@
                                         $letter_answer = "B";
                                     }else if($row["correct_answer"]==2){
                                         $letter_answer = "C";
-                                    }else{$letter_answer = "D";}
+                                    }else if($row["correct_answer"]==3){
+                                        $letter_answer = "D";
+                                    } else{$letter_answer = "E";}
                                     $temp= $row['question_id'];
+
                         ?>
                         <tr>
                             <td><?php echo $row['question_id']; ?></td>
                             <td><?php echo $row['question']; ?></td>
                             <td><?php echo $letter_answer; ?></td>
                             <td>
-                                <button class="btn btn-primary" type="submit" value="add_question" name="add_question">Ekle</button>
+                              <input type="checkbox"
+                                        value="<?php echo $row['question_id']; ?>"
+                                        name="questionIds[]"
+                              <?php
+                                        for($i=0; $i < count($questions_chk); $i++){
+                                        }
+                                                              ?>
+                                />
                             </td>
+
                         <?php
 
                                 }
@@ -121,9 +137,7 @@
                 </table>
             </div>
          </div>
-         <div class="form-group">
-            <button class="btn btn-primary" name="edit" type="submit">Düzenle</button>
-         </div>
+
       </form>
       </div>
    </section>

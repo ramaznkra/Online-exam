@@ -19,11 +19,11 @@
                 <!-- --------------------show page list -------------------- -->
                 <div id="home" class="container tab-pane active">
                     <br/>
-                    
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                            <!--    <th scope="col">#</th> -->
                                 <th scope="col">Kağıt Adı</th>
                                 <th scope="col">Sınav Süresi (dk)</th>
                                 <th scope="col">Başlama Tarihi</th>
@@ -33,26 +33,26 @@
                         </thead>
                         <tbody>
                             <?php
-                              
+
                                 $result = mysqli_query($link, "SELECT paper_id, paper_name, paper_duration, start_date, end_date FROM papers");
                                 if($result -> num_rows > 0){
-                                    while($row = mysqli_fetch_array($result)){ 
+                                    while($row = mysqli_fetch_array($result)){
                                         $temp=$row['paper_id'];
                             ?>
                                 <tr>
-                                    <td><?php echo $row['paper_id'];?></td>
+                                <!--    <td><?php // echo $row['paper_id'];?></td> -->
                                     <td><?php echo $row['paper_name'];?></td>
                                     <td><?php echo $row['paper_duration'];?></td>
                                     <td><?php echo $row['start_date']; ?></td>
                                     <td><?php echo $row['end_date']; ?></td>
-                                   
+
                                     <td>
                                         <form method="POST" action="check.php">
                                             <a class="btn btn-danger" name="enter" href="check.php?paperid=<?php echo $temp; ?>">Sınava Gir</a>
                                         </form>
                                 </tr>
                                 <?php
-                               
+
                                     }
                                     }else{
                                         echo "Hiç soru kağıdı bulunamadı.";
@@ -63,7 +63,7 @@
                     </table>
                 </div>
             </div>
-        </div> 
+        </div>
     </section>
 
 </div>
