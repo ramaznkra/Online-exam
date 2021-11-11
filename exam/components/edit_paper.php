@@ -2,6 +2,8 @@
    include_once "../connect.php";
    include_once "./sidebar.php";
    $id = $_GET['paperid'];
+   $us_cat = $_SESSION['userCategory'];
+   $categories = explode(",", $us_cat);
    if (isset($_POST["edit"])){
      $paper_name = $min_pass_score = $mark_per_question = $paper_duration = $start_date = $end_date = "";
 
@@ -11,14 +13,14 @@
       $paper_duration = mysqli_real_escape_string($link, $_POST["paper_duration"]);
       $start_date = mysqli_real_escape_string($link, $_POST["start_date"]);
       $end_date = mysqli_real_escape_string($link, $_POST["end_date"]);
-  
+      $paper_cat = mysqli_real_escape_string($link,$_POST["category"]);
       $questionIds =($_POST["questionIds"]);
       $chk = "";
       foreach ($questionIds as $questionIdsResult){
         $chk.=$questionIdsResult.",";
       }
 
-      $sql = "UPDATE papers SET paper_name = '$paper_name', min_pass_score = '$min_pass_score', mark_per_question = '$mark_per_question', paper_duration = '$paper_duration', start_date = '$start_date', end_date = '$end_date', questions = '$chk'  WHERE paper_id=$_POST[id2]";
+      $sql = "UPDATE papers SET paper_name = '$paper_name', min_pass_score = '$min_pass_score', mark_per_question = '$mark_per_question', paper_duration = '$paper_duration', start_date = '$start_date', end_date = '$end_date', category = '$paper_cat' , questions = '$chk'  WHERE paper_id=$_POST[id2]";
       $result =mysqli_query($link,$sql);
       if($result){
          echo "<script>alert('Başarıyla güncellendi')</script>";
@@ -27,7 +29,11 @@
          echo "<script>alert('Güncellenirken bir hata ile karşılaşıldı.')</script>";
      }
      header("location: ../papers.php");
+
    }
+
+
+
 ?>
 <div class="content pt-3">
    <section>
@@ -44,8 +50,10 @@
                     $start_date2  = date("Y-m-d\TH:i",strtotime($row["start_date"]));
                     $end_date2 = date("Y-m-d\TH:i",strtotime($row["end_date"]));
                     $questions = $row["questions"];
+                    $paper_cat = $row["category"];
                }
                     $questions_chk = explode(",", $questions);
+                  
 
          ?>
          <div class="row">
@@ -80,10 +88,22 @@
                </div>
             </div>
          </div>
-         <div class="form-group">
-            <p>Eklemek istediğiniz soruları seçerek kaydet butonuna basınız.</p>
-
-              <button class="btn btn-primary" name="edit" type="submit">Kaydet</button>
+         <div>
+            <select name="category" style="float:left">
+            <option value="" disabled selected>Ders Seçiniz</option>
+             <?php
+               $i = 0;
+               for($i; $i<count($categories); $i++){
+                 echo "<option value='$categories[$i]'>";
+                 echo $categories[$i];
+                 echo "</option>";
+           }
+           ?>
+         </select>
+       </div>
+              <button class="btn btn-primary" style ="float:right" name="edit" type="submit">Kaydet</button>
+              <div class="form-group" style="float:right">
+              </br> <p>Eklemek istediğiniz soruları seçerek kaydet butonuna basınız.</p>
             <div class="mt-3" id="list_question" style="heigth=auto;">
                 <table class="table table-striped">
                     <thead>
@@ -91,12 +111,13 @@
                             <th scope="col">#</th>
                             <th scope="col">Soru</th>
                             <th scope="col">Cevabı</th>
+                            <th scope="col">Kategori</th>
                             <th scope="col">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer FROM questions");
+                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions");
                             if($records -> num_rows >0){
                                 while($row = mysqli_fetch_array($records)){
                                     if($row["correct_answer"]==0){
@@ -114,6 +135,7 @@
                             <td><?php echo $row['question_id']; ?></td>
                             <td><?php echo $row['question']; ?></td>
                             <td><?php echo $letter_answer; ?></td>
+                            <td><?php echo $row['category']; ?></td>
                             <td>
                               <input type="checkbox"
                                     value="<?php echo $row['question_id']; ?>"

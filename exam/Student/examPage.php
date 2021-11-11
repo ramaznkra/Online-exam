@@ -20,7 +20,7 @@
         }
     }
     $questionsArr = explode(",", $questions);
-
+  
     if(isset($_POST["submit"])){
         /*$chk = "";
         foreach ($questionIds as $questionIdsAnswer){
@@ -99,7 +99,7 @@
                                 </div>
                                 <?php
                             }
-                            if($i > $questionsResult -> num_rows){break;}
+                            
                         }
                     }
                 ?>
