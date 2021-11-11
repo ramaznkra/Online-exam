@@ -87,7 +87,7 @@
                                     <td><?php echo $row['paper_name'];?></td>
                                     <td><?php echo $row['paper_duration'];?></td>
                                     <td><?php echo date("Y-m-d H:i",strtotime($row["start_date"])); ?></td>
-                                    <td><?php echo  date("Y-m-d H:i",strtotime($row['end_date'])); ?></td>
+                                    <td><?php echo date("Y-m-d H:i",strtotime($row['end_date'])); ?></td>
 
                                     <td>
                                         <a class="btn btn-primary" href="./components/edit_paper.php?paperid=<?php echo $temp; ?>">Düzenle</a>

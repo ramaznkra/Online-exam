@@ -23,7 +23,6 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                            <!--    <th scope="col">#</th> -->
                                 <th scope="col">Kağıt Adı</th>
                                 <th scope="col">Sınav Süresi (dk)</th>
                                 <th scope="col">Başlama Tarihi</th>
@@ -33,31 +32,48 @@
                         </thead>
                         <tbody>
                             <?php
-
                                 $result = mysqli_query($link, "SELECT paper_id, paper_name, paper_duration, start_date, end_date FROM papers");
                                 if($result -> num_rows > 0){
                                     while($row = mysqli_fetch_array($result)){
-                                        $temp=$row['paper_id'];
+                                        $temp=$row['paper_id']; 
+                                        $s_time=strval($row['start_date']);
+                                        
                             ?>
                                 <tr>
-                                <!--    <td><?php // echo $row['paper_id'];?></td> -->
                                     <td><?php echo $row['paper_name'];?></td>
                                     <td><?php echo $row['paper_duration'];?></td>
-                                    <td><?php echo $row['start_date']; ?></td>
+                                    <td><?php echo $s_time; ?></td>
                                     <td><?php echo $row['end_date']; ?></td>
-
                                     <td>
                                         <form method="POST" action="check.php">
-                                            <a class="btn btn-danger" name="enter" href="check.php?paperid=<?php echo $temp; ?>">Sınava Gir</a>
+                                            <a id="<?php echo $temp; ?>" class="btn btn-danger" name="enter"  href="<?php echo "check.php?paperid=".$temp ?>">Sınava Gir</a>
+                                            <?php
+                                                date_default_timezone_set('Europe/Istanbul');
+                                                $dt = date("Y-m-d H:i:00");
+                                                strval($dt);
+                                                echo "<script>";
+                                                    echo "var s_time =".json_encode($s_time).";";
+                                                    echo "var temp =".json_encode($temp).";"; 
+                                                    echo "var dty =".json_encode($dt).";";
+                                                    echo "if(dty!=s_time){";
+                                                        echo "document.getElementById(temp).classList.remove('btn-success');";
+                                                        echo "document.getElementById(temp).style.pointerEvents = 'none';";
+                                                        echo "document.getElementById(temp).classList.add('btn-danger');";
+                                                    echo "}else{";
+                                                        echo "document.getElementById(temp).classList.remove('btn-danger');";
+                                                        echo "document.getElementById(temp).style.pointerEvents = 'auto';";
+                                                        echo "document.getElementById(temp).classList.add('btn-success');";
+                                                    echo "}";
+                                                echo "</script>";
+                                            ?>
                                         </form>
                                 </tr>
                                 <?php
-
                                     }
                                     }else{
                                         echo "Hiç soru kağıdı bulunamadı.";
                                     }
-                                    //$link ->close();
+                                    $link ->close();
                                 ?>
                         </tbody>
                     </table>
@@ -65,5 +81,6 @@
             </div>
         </div>
     </section>
-
 </div>
+
+</script>

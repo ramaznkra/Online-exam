@@ -27,11 +27,7 @@
          echo "<script>alert('Güncellenirken bir hata ile karşılaşıldı.')</script>";
      }
      header("location: ../papers.php");
-
    }
-
-
-
 ?>
 <div class="content pt-3">
    <section>
