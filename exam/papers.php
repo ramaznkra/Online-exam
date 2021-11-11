@@ -2,11 +2,6 @@
     include_once 'sidebar.php';
     include_once 'connect.php';
 
-    $us_cat = $_SESSION['userCategory'];
-
-    $paper_name = $min_pass_score = $mark_per_question = $paper_duration = $start_date = $end_date = $category ="";
-    $start_date_err = $end_date_err = $chk_err = "";
-
       if(isset($_POST["submit"])){
           $paper_name = trim($_POST["paper_name"]);
           $min_pass_score = trim($_POST["min_pass_score"]);
@@ -14,33 +9,10 @@
           $paper_duration = trim($_POST["paper_duration"]);
           $start_date = trim($_POST["start_date"]);
           $end_date = trim ($_POST["end_date"]);
+          $paper_cat = $_POST["category"];
           $questionIds =($_POST["questionIds"]);
-
-          $chk = "";
-          foreach ($questionIds as $questionIdsResult){
-            $chk.=$questionIdsResult.",";
-          }
-
-          if($start_date == "0000-00-00" || empty(trim("$end_date"))){
-             $start_date_err = "Başlangıç zamanı boş bırakılamaz.";
-          }else if($start_date >= $end_date){
-              $start_date_err = "Başlangıç zamanı bitiş zamanından büyük veya eşit olamaz.";
-          }else{
-             $start_date;
-          }
-
-          if(empty(trim("$end_date"))){
-             $end_date_err = "Bitiş zamanı boş bırakılamaz.";
-          }else{
-             $end_date;
-          }
-
-          if(empty($start_date_err) && empty($chk_err)){
-            $sql = "INSERT INTO papers (paper_name, min_pass_score, mark_per_question, paper_duration, start_date,end_date,questions) VALUES ('$paper_name', '$min_pass_score','$mark_per_question','$paper_duration','$start_date','$end_date','$chk')";
-            mysqli_query($link, $sql);
-          }
         }
-
+      $us_cat = $_SESSION['userCategory'];
       $categories = explode(",", $us_cat);
 ?>
 
@@ -72,23 +44,25 @@
                                 <th scope="col">Başlama Tarihi</th>
                                 <!--<th scope="col">Toplam Soru Sayısı</th>-->
                                 <th scope="col">Bitiş Tarihi</th>
+                                <th scope="col">Kategori</th>
                                 <th scope="col">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
 
-                                $result = mysqli_query($link, "SELECT paper_id,paper_name, paper_duration, start_date, end_date FROM papers");
+                                $result = mysqli_query($link, "SELECT paper_id,paper_name, paper_duration, start_date, end_date, category FROM papers");
                                 if($result -> num_rows > 0){
                                     while($row = mysqli_fetch_array($result)){
                                         $temp=$row['paper_id'];
+
                             ?>
                                 <tr>
                                     <td><?php echo $row['paper_name'];?></td>
                                     <td><?php echo $row['paper_duration'];?></td>
-                                    <td><?php echo date("Y-m-d H:i",strtotime($row["start_date"])); ?></td>
-                                    <td><?php echo  date("Y-m-d H:i",strtotime($row['end_date'])); ?></td>
-
+                                    <td><?php echo date("Y-m-d H:i",strtotime($row['start_date']));?></td>
+                                    <td><?php echo date("Y-m-d H:i",strtotime($row['end_date'])); ?></td>
+                                    <td><?php echo $row['category'];?></td>
                                     <td>
                                         <a class="btn btn-primary" href="./components/edit_paper.php?paperid=<?php echo $temp; ?>">Düzenle</a>
                                         <a class="btn btn-danger" href="./components/delete_paper.php?paperid=<?php echo $temp; ?>">Sil</a>
@@ -108,7 +82,8 @@
                 <div id="menu1" class="container tab-pane fade">
                     <br>
                     <h4>Yeni Kağıt</h4>
-                      <form method="post" id="paper" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                      <form method="post" id="paper" action="./components/add_paper.php ?>">
+
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -140,13 +115,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div>
+                           <select name="category" style="float:left">
+                           <option value="" disabled selected>Sınav Kategorisi</option>
+                            <?php
+                              $i = 0;
+                              for($i; $i<count($categories); $i++){
+                                echo "<option value='$categories[$i]'>";
+                                echo $categories[$i];
+                                echo "</option>";
+                          }
+                          ?>
+                        </select>
+                      </div>
                         <div class="form-group">
-                            <button class="btn btn-primary mb-5" name="submit" type="submit">Oluştur</button>
+                            <button class="btn btn-primary mb-5" style="float:right" name="submit" type="submit">Oluştur</button>
 
                         </div>
-                        <div class="form-group">
-                            <p>Lütfen eklemek istediğiniz soruları seçiniz.</p>
 
+                        <div class="form-group" style="float:left">
+                         <p>Eklemek istediğiniz soruları seçerek oluştur butonuna basınız.</p>
                             <div class="mt-3" id="list_question" style="heigth=auto;">
                                 <table class="table table-striped">
                                     <thead>
@@ -159,6 +147,7 @@
                                     </thead>
                                     <tbody>
                                       <?php
+
                                             $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions");
                                             if($records -> num_rows >0){
                                                 while($row = mysqli_fetch_array($records)){
@@ -187,7 +176,7 @@
                                         <?php
                                                 }
                                           }else{echo "Hiç soru bulunamadı."; }
-                                          $link -> close();
+
 
                                         ?>
                                     </tbody>

@@ -14,6 +14,10 @@ require_once "connect.php";
     $correct_answer = $_POST["correct_answer"];
     $category = $_POST["Category"];
  }
+    $teach_cat = $_SESSION["userCategory"];
+    $categories = explode(",", $teach_cat);
+
+
 ?>
 
   <!--Content-->
@@ -50,6 +54,22 @@ require_once "connect.php";
                     <tbody>
 
                         <?php
+                        $catarray = [];
+                            $recordss = mysqli_query ($link,"SELECT * FROM questions");
+                            if($recordss -> num_rows > 0){
+
+                                  $numcount =  $recordss -> num_rows;
+                                  while($row = mysqli_fetch_array($recordss)){
+                                    array_push($catarray,$row['category']);
+                                  }
+                            }
+                        /*    for($i=0; $i<$numcount; $i++){
+                              for ($y=0; $y<count($categories); $y++){
+                                if ($catarray[$i] == $categories[$y]){
+                                  echo $categories[$y];
+                                }
+                            }
+                          } */
                             $records = mysqli_query ($link,"SELECT * FROM questions");
                             if($records -> num_rows > 0){
                                 while($row = mysqli_fetch_array($records)){
@@ -74,14 +94,11 @@ require_once "connect.php";
 
                             </td>
                         <?php
-
-                                }
+                        }
                            }else{echo "Hiç soru bulunamadı."; }
-
                         ?>
                     </tbody>
                 </table><br>
-
                 </div>
                 <div id="menu1" class="container tab-pane fade"><br>
                     <h4>Yeni soru</h4>
@@ -91,8 +108,6 @@ require_once "connect.php";
                               <select name="Category" style="float:right">
                               <option value="" disabled selected>Ders Seçiniz</option>
                               <?php
-                              $teach_cat = $_SESSION["userCategory"];
-                              $categories = explode(",", $teach_cat);
                               $i = 0;
                               for($i; $i<count($categories); $i++){
                                 echo "<option value='$categories[$i]'>";

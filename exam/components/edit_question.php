@@ -2,6 +2,8 @@
    include_once "../connect.php";
    include_once "./sidebar.php";
    $id=$_GET['questionid'];
+   $teach_cat = $_SESSION["userCategory"];
+   $categories = explode(",", $teach_cat);
 
    /*if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['update'])){
         updatef();
@@ -9,7 +11,7 @@
     function updatef()
     {
         echo "<script>alert('$id')</script>";
-        // do stuff     
+        // do stuff
     }*/
 
 
@@ -24,13 +26,13 @@
        $answer3 =  mysqli_real_escape_string($link,$_POST["answer3_d"]);
        $answer4 =  mysqli_real_escape_string($link,$_POST["answer4_d"]);
        $correct_answer =  mysqli_real_escape_string($link,$_POST["correct_answer_d"]);
+       $category = $_POST["Category"];
 
-      
-      
-       $sql = "UPDATE questions SET question='$question', answer1='$answer1', answer2='$answer2', answer3='$answer3', answer4='$answer4', correct_answer='$correct_answer'  WHERE question_id=$_POST[id2]";
-    
-       $result =mysqli_query($link,$sql); 
-  
+
+       $sql = "UPDATE questions SET question='$question', answer1='$answer1', answer2='$answer2', answer3='$answer3', answer4='$answer4', correct_answer='$correct_answer' , category ='$category'  WHERE question_id=$_POST[id2]";
+
+       $result =mysqli_query($link,$sql);
+
        if($result){
            echo "<script>alert('Başarıyla güncellendi')</script>";
        }
@@ -46,9 +48,9 @@
 
     <div class="content pt-3">
         <h4>Soru Düzenle</h4>
-        
+
             <?php
-                $result = mysqli_query($link, "SELECT question, answer1, answer2, answer3, answer4, correct_answer FROM questions WHERE question_id=$id");
+                $result = mysqli_query($link, "SELECT question, answer1, answer2, answer3, answer4, correct_answer , category FROM questions WHERE question_id=$id");
                 while ($row = mysqli_fetch_assoc($result)) {
                     $question = $row["question"];
                     $answer1 = $row["answer1"];
@@ -56,6 +58,7 @@
                     $answer3 = $row["answer3"];
                     $answer4 = $row["answer4"];
                     $correct_answer = $row["correct_answer"];
+                    $category = $row["category"];
                 }
             ?>
         <div class="card bg-light text-dark">
@@ -64,6 +67,17 @@
                     <div class="form-group">
                         <input type="hidden" class="form-control" name="id2" value="<?php echo $id; ?>"></input>
                     </div>
+                    <select name="Category" style="float:right">
+                    <option value="" disabled selected>Ders Seçiniz</option>
+                    <?php
+                    $i = 0;
+                    for($i; $i<count($categories); $i++){
+                      echo "<option value='$categories[$i]'>";
+                      echo $categories[$i];
+                      echo "</option>";
+                    }
+                    ?>
+                  </select>
                     <div class="form-group">
                         <label>Soru</label>
                         <textarea class="form-control" rows="6" name="question_d"><?php echo $question; ?></textarea>
