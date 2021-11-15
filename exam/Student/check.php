@@ -5,9 +5,9 @@
     $paper_id = $_GET['paperid'];
     $email = $password = "";
     $email_err = $password_err = $login_err = "";
+    
+    if(isset($_POST["submit"])){
 
-    if(isset($_POST["enter"])){
-       
             // Check if email is empty
             if(empty(trim($_POST["email"]))){
                 $email_err = "Email boş bırakılamaz.";
@@ -58,7 +58,6 @@
                 mysqli_stmt_close($stmt);
             }
         }
-
     }
 
 ?>
@@ -89,15 +88,22 @@
                 </div>
       
                 <div class="form-group mt-3">
-                    
-                    <a class="btn btn-primary" id="send" href="./examPage.php?paperid=<?php echo $paper_id; ?>">Sınava Giriş</a>
+                    <button class="btn btn-primary" id="send" type="submit" name="submit">Sınava Giriş</button>
                 </div>
             </form>
     </section>
 </div>
 <script>
+    $(document).keypress(
+        function(event){
+            if (event.which == '13') {
+                event.preventDefault();
+            }
+        }
+    );
     var checker = document.getElementById('chk');
     var sendbtn = document.getElementById('send');
+    checker.unchecked;
     sendbtn.style.pointerEvents = "none";
     checker.onchange= function () {
         if(this.checked){
