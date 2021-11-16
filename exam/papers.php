@@ -50,8 +50,8 @@
                         </thead>
                         <tbody>
                             <?php
-
-                                $result = mysqli_query($link, "SELECT paper_id,paper_name, paper_duration, start_date, end_date, category FROM papers");
+                              for ($i = 0; $i < count($categories)-1; $i++){
+                                $result = mysqli_query($link, "SELECT paper_id,paper_name, paper_duration, start_date, end_date, category FROM papers WHERE category = '$categories[$i]'");
                                 if($result -> num_rows > 0){
                                     while($row = mysqli_fetch_array($result)){
                                         $temp=$row['paper_id'];
@@ -70,9 +70,8 @@
                                 <?php
 
                                     }
-                                    }else{
-                                        echo "Hiç soru kağıdı bulunamadı.";
-                                    }
+                                    }else{echo "Hiç soru kağıdı bulunamadı.";}
+                                  }
                                     //$link ->close();
                                 ?>
                         </tbody>
@@ -117,7 +116,7 @@
                         </div>
                         <div>
                            <select name="category" style="float:left">
-                           <option value="" disabled selected>Sınav Kategorisi</option>
+                           <option value="" disabled selected>Ders Seçiniz</option>
                             <?php
                               $i = 0;
                               for($i; $i<count($categories); $i++){
@@ -147,8 +146,8 @@
                                     </thead>
                                     <tbody>
                                       <?php
-
-                                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions");
+                                          for ($i = 0; $i < count($categories); $i++){
+                                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions WHERE category = '$categories[$i]'");
                                             if($records -> num_rows >0){
                                                 while($row = mysqli_fetch_array($records)){
                                                   if($row["correct_answer"]==0){
@@ -176,8 +175,7 @@
                                         <?php
                                                 }
                                           }else{echo "Hiç soru bulunamadı."; }
-
-
+                                        }
                                         ?>
                                     </tbody>
                                 </table>

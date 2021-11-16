@@ -17,7 +17,36 @@ require_once "connect.php";
     $teach_cat = $_SESSION["userCategory"];
     $categories = explode(",", $teach_cat);
 
+  /*  function select_question() {
 
+      for ($i = 0; $i < count($categories); $i++){
+        $questions_record = mysqli_query($link,"SELECT * FROM questions WHERE category = '$categories[$i]'");
+        if($questions_record -> num_rows > 0){
+          while($questions_row = mysqli_fetch_array($questions_record)){
+            if($questions_row["correct_answer"] == 0){
+                        $letter_answer = "A";
+                    }else if($questions_row["correct_answer"] == 1){
+                        $letter_answer = "B";
+                    }else if($questions_row["correct_answer"] == 2){
+                        $letter_answer = "C";
+                    }else if($questions_row["correct_answer"] == 3){
+                        $letter_answer = "D";
+                    }else{$letter_answer = "E";}
+                    $temp= $questions_row['question_id'];
+
+         echo "<tr>";
+              echo "<td>$questions_row[question]</td>";
+              echo "<td>$letter_answer</td>";
+              echo "<td>$questions_row[category]</td>";
+              echo "<td>";
+              echo "<a class='btn btn-primary' href='./components/edit_question.php?questionid=$temp'>Düzenle</a>";
+              echo "<a class='btn btn-danger' href='./components/delete_question.php?questionid=$temp'>Sil</a>";
+              echo "</td>";
+          echo "</tr>";
+          }
+        }else{echo "Hiç soru bulunamadı.";}
+      }
+    }*/
 ?>
 
   <!--Content-->
@@ -41,6 +70,17 @@ require_once "connect.php";
             <!-- Tab panes -->
             <div class="tab-content">
                 <div id="home" class="container tab-pane active"><br>
+                  <select name="category" style="float:right">
+                  <option value="" disabled selected>Ders Seçiniz</option>
+                 <?php
+                     $i = 0;
+                     for($i; $i<count($categories); $i++){
+                       echo "<option value='$categories[$i]'>";
+                       echo $categories[$i];
+                       echo "</option>";
+                 }
+                 ?>
+               </select>
                     <h4>Sorular</h4>
                     <table class="table table-striped">
                     <thead>
@@ -52,51 +92,37 @@ require_once "connect.php";
                         </tr>
                     </thead>
                     <tbody>
-
-                        <?php
-                        $catarray = [];
-                            $recordss = mysqli_query ($link,"SELECT * FROM questions");
-                            if($recordss -> num_rows > 0){
-
-                                  $numcount =  $recordss -> num_rows;
-                                  while($row = mysqli_fetch_array($recordss)){
-                                    array_push($catarray,$row['category']);
-                                  }
-                            }
-                        /*    for($i=0; $i<$numcount; $i++){
-                              for ($y=0; $y<count($categories); $y++){
-                                if ($catarray[$i] == $categories[$y]){
-                                  echo $categories[$y];
-                                }
-                            }
-                          } */
-                            $records = mysqli_query ($link,"SELECT * FROM questions");
-                            if($records -> num_rows > 0){
-                                while($row = mysqli_fetch_array($records)){
-                                    if($row["correct_answer"] == 0){
+                      <?php
+                      for ($i = 0; $i < count($categories); $i++){
+                        $questions_record = mysqli_query($link,"SELECT * FROM questions WHERE category = '$categories[$i]'");
+                        if($questions_record -> num_rows > 0){
+                          while($questions_row = mysqli_fetch_array($questions_record)){
+                            if($questions_row["correct_answer"] == 0){
                                         $letter_answer = "A";
-                                    }else if($row["correct_answer"] == 1){
+                                    }else if($questions_row["correct_answer"] == 1){
                                         $letter_answer = "B";
-                                    }else if($row["correct_answer"] == 2){
+                                    }else if($questions_row["correct_answer"] == 2){
                                         $letter_answer = "C";
-                                    }else if($row["correct_answer"] == 3){
+                                    }else if($questions_row["correct_answer"] == 3){
                                         $letter_answer = "D";
                                     }else{$letter_answer = "E";}
-                                    $temp= $row['question_id'];
-                        ?>
-                        <tr>
-                            <td><?php echo $row['question']; ?></td>
-                            <td><?php echo $letter_answer; ?></td>
-                            <td><?php echo $row['category']; ?></td>
-                            <td>
-                                <a class="btn btn-primary" href="./components/edit_question.php?questionid=<?php echo $temp; ?>">Düzenle</a>
-                                <a class="btn btn-danger" href="./components/delete_question.php?questionid=<?php echo $temp; ?>">Sil</a>
+                                    $temp= $questions_row['question_id'];
+                                ?>
+                          <tr>
+                                <td><?php echo $questions_row['question']; ?></td>
+                                <td><?php echo $letter_answer; ?></td>
+                                <td><?php echo $questions_row['category']; ?></td>
+                                <td>
+                                  <a class="btn btn-primary" href="./components/edit_question.php?questionid=<?php echo $temp; ?>">Düzenle</a>
+                                  <a class="btn btn-danger" href="./components/delete_question.php?questionid=<?php echo $temp; ?>">Sil</a>
+                                </td>
+                          </tr>
+                          <?php
+                          }
+                        }else{echo "Hiç soru bulunamadı.";}
+                      }
+                       ?>
 
-                            </td>
-                        <?php
-                        }
-                           }else{echo "Hiç soru bulunamadı."; }
-                        ?>
                     </tbody>
                 </table><br>
                 </div>

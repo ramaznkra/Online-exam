@@ -68,7 +68,7 @@
                         <input type="hidden" class="form-control" name="id2" value="<?php echo $id; ?>"></input>
                     </div>
                     <select name="Category" style="float:right">
-                    <option value="" disabled selected>Ders Seçiniz</option>
+                    <option value="" disabled selected><?php echo $category ?></option>
                     <?php
                     $i = 0;
                     for($i; $i<count($categories); $i++){
