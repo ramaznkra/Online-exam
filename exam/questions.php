@@ -16,37 +16,6 @@ require_once "connect.php";
  }
     $teach_cat = $_SESSION["userCategory"];
     $categories = explode(",", $teach_cat);
-
-  /*  function select_question() {
-
-      for ($i = 0; $i < count($categories); $i++){
-        $questions_record = mysqli_query($link,"SELECT * FROM questions WHERE category = '$categories[$i]'");
-        if($questions_record -> num_rows > 0){
-          while($questions_row = mysqli_fetch_array($questions_record)){
-            if($questions_row["correct_answer"] == 0){
-                        $letter_answer = "A";
-                    }else if($questions_row["correct_answer"] == 1){
-                        $letter_answer = "B";
-                    }else if($questions_row["correct_answer"] == 2){
-                        $letter_answer = "C";
-                    }else if($questions_row["correct_answer"] == 3){
-                        $letter_answer = "D";
-                    }else{$letter_answer = "E";}
-                    $temp= $questions_row['question_id'];
-
-         echo "<tr>";
-              echo "<td>$questions_row[question]</td>";
-              echo "<td>$letter_answer</td>";
-              echo "<td>$questions_row[category]</td>";
-              echo "<td>";
-              echo "<a class='btn btn-primary' href='./components/edit_question.php?questionid=$temp'>Düzenle</a>";
-              echo "<a class='btn btn-danger' href='./components/delete_question.php?questionid=$temp'>Sil</a>";
-              echo "</td>";
-          echo "</tr>";
-          }
-        }else{echo "Hiç soru bulunamadı.";}
-      }
-    }*/
 ?>
 
   <!--Content-->
@@ -70,17 +39,6 @@ require_once "connect.php";
             <!-- Tab panes -->
             <div class="tab-content">
                 <div id="home" class="container tab-pane active"><br>
-                  <select name="category" style="float:right">
-                  <option value="" disabled selected>Ders Seçiniz</option>
-                 <?php
-                     $i = 0;
-                     for($i; $i<count($categories); $i++){
-                       echo "<option value='$categories[$i]'>";
-                       echo $categories[$i];
-                       echo "</option>";
-                 }
-                 ?>
-               </select>
                     <h4>Sorular</h4>
                     <table class="table table-striped">
                     <thead>
@@ -98,7 +56,7 @@ require_once "connect.php";
                         if($questions_record -> num_rows > 0){
                           while($questions_row = mysqli_fetch_array($questions_record)){
                             if($questions_row["correct_answer"] == 0){
-                                        $letter_answer = "A";
+                                        $letter_anser = "A";
                                     }else if($questions_row["correct_answer"] == 1){
                                         $letter_answer = "B";
                                     }else if($questions_row["correct_answer"] == 2){

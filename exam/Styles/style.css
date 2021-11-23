@@ -101,7 +101,6 @@ label #sidebar_btn:hover{
    
     transition:0.5s;
 }
-
 section{
     padding-top: 60px;
     height: 100vh;
@@ -128,3 +127,4 @@ section{
 	margin: 10px 0 0 0;
 	font-size: 14px;
 }
+
