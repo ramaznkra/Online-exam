@@ -3,11 +3,11 @@
     // notları karşılaştır sonra filtrele
     include_once '../connect.php';
     session_start();
-
+    $name = $_SESSION['name'];
+    $surname = $_SESSION['surname'];
     $paper_id = $pid = $_SESSION['pid'];
     $_SESSION['pid'] = $paper_id;
     $user_id=$_SESSION["id"];
-
     $postedAnswers = implode(" ",$_POST);
     $postedAnswersArr = explode(" ", $postedAnswers);
     for($i=0;$i<count($postedAnswersArr);$i++){
@@ -29,10 +29,10 @@
     foreach ($postedAnswersArr as $givenAnswer){
         $chk.=$givenAnswer.",";
     }
-    $result = mysqli_query($link, "SELECT * FROM papers WHERE paper_id=$paper_id");
+    $result = mysqli_query($link, "SELECT * FROM papers WHERE paper_id = $paper_id");
     if($result -> num_rows > 0){
         while($row = mysqli_fetch_array($result)){
-            $paperName = $row['paper_name'];
+            $paper_name = $row['paper_name'];
             $paperDuration = $row['paper_duration'];
             $questions = $row['questions'];
             $paper_start = $row['start_date'];
@@ -79,12 +79,13 @@
             $counter = $counter + $mark_per_question;
           }
       }
+      echo $counter;
       if($counter < $min_pass_score){
-        $status = "kaldı";
+        $status = "Başarısız";
       } else if($counter >= $min_pass_score){
-        $status = "geçti";
+        $status = "Başarılı";
       }
-        $sql = "INSERT INTO questions_answers (paper_id, s_id, s_questions, answers, answer_key, status, category) VALUES ('$pid', '$user_id', '$questions','$chk','$chk2','$status','$paper_cat')";
+        $sql = "INSERT INTO questions_answers (name, surname, paper_id, s_id, s_questions, answers, answer_key, status, mark, category) VALUES ('$name', '$surname', '$pid', '$user_id', '$questions', '$chk', '$chk2', '$status', '$counter', '$paper_cat')";
         mysqli_query($link, $sql);
         header("location: papers.php");
     }
@@ -100,7 +101,7 @@
       <?php echo $chk ?>
         <div class="container pro_content pb-2">
             <blockquote class="blockquote text-right">
-                <p class="mb-0 text-primary"><?php echo $paperName; ?> Sınavı</p>
+                <p class="mb-0 text-primary"><?php echo $paper_name; ?> Sınavı</p>
                 <footer class="blockquote-footer"><p id="demo"></p></footer>
             </blockquote>
             <hr/>
