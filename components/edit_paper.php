@@ -53,7 +53,7 @@
                     $paper_cat = $row["category"];
                }
                     $questions_chk = explode(",", $questions);
-                  
+
 
          ?>
          <div class="row">
@@ -90,7 +90,7 @@
          </div>
          <div>
             <select name="category" style="float:left">
-            <option value="" disabled selected>Ders Seçiniz</option>
+            <option value="<?php echo $paper_cat; ?>" disabled selected><?php echo $paper_cat ?></option>
              <?php
                $i = 0;
                for($i; $i<count($categories); $i++){
@@ -117,7 +117,8 @@
                     </thead>
                     <tbody>
                         <?php
-                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions");
+                          for($i = 0; $i < count($categories); $i++){
+                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions WHERE category = '$categories[$i]'");
                             if($records -> num_rows >0){
                                 while($row = mysqli_fetch_array($records)){
                                     if($row["correct_answer"]==0){
@@ -146,6 +147,7 @@
                         <?php
                                 }
                         }else{echo "Hiç soru bulunamadı."; }
+                      }
                         $link -> close();
                         ?>
                     </tbody>

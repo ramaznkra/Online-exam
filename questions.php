@@ -16,8 +16,6 @@ require_once "connect.php";
  }
     $teach_cat = $_SESSION["userCategory"];
     $categories = explode(",", $teach_cat);
-
-
 ?>
 
   <!--Content-->
@@ -52,51 +50,37 @@ require_once "connect.php";
                         </tr>
                     </thead>
                     <tbody>
-
-                        <?php
-                        $catarray = [];
-                            $recordss = mysqli_query ($link,"SELECT * FROM questions");
-                            if($recordss -> num_rows > 0){
-
-                                  $numcount =  $recordss -> num_rows;
-                                  while($row = mysqli_fetch_array($recordss)){
-                                    array_push($catarray,$row['category']);
-                                  }
-                            }
-                        /*    for($i=0; $i<$numcount; $i++){
-                              for ($y=0; $y<count($categories); $y++){
-                                if ($catarray[$i] == $categories[$y]){
-                                  echo $categories[$y];
-                                }
-                            }
-                          } */
-                            $records = mysqli_query ($link,"SELECT * FROM questions");
-                            if($records -> num_rows > 0){
-                                while($row = mysqli_fetch_array($records)){
-                                    if($row["correct_answer"] == 0){
-                                        $letter_answer = "A";
-                                    }else if($row["correct_answer"] == 1){
+                      <?php
+                      for ($i = 0; $i < count($categories); $i++){
+                        $questions_record = mysqli_query($link,"SELECT * FROM questions WHERE category = '$categories[$i]'");
+                        if($questions_record -> num_rows > 0){
+                          while($questions_row = mysqli_fetch_array($questions_record)){
+                            if($questions_row["correct_answer"] == 0){
+                                        $letter_anser = "A";
+                                    }else if($questions_row["correct_answer"] == 1){
                                         $letter_answer = "B";
-                                    }else if($row["correct_answer"] == 2){
+                                    }else if($questions_row["correct_answer"] == 2){
                                         $letter_answer = "C";
-                                    }else if($row["correct_answer"] == 3){
+                                    }else if($questions_row["correct_answer"] == 3){
                                         $letter_answer = "D";
                                     }else{$letter_answer = "E";}
-                                    $temp= $row['question_id'];
-                        ?>
-                        <tr>
-                            <td><?php echo $row['question']; ?></td>
-                            <td><?php echo $letter_answer; ?></td>
-                            <td><?php echo $row['category']; ?></td>
-                            <td>
-                                <a class="btn btn-primary" href="./components/edit_question.php?questionid=<?php echo $temp; ?>">Düzenle</a>
-                                <a class="btn btn-danger" href="./components/delete_question.php?questionid=<?php echo $temp; ?>">Sil</a>
+                                    $temp= $questions_row['question_id'];
+                                ?>
+                          <tr>
+                                <td><?php echo $questions_row['question']; ?></td>
+                                <td><?php echo $letter_answer; ?></td>
+                                <td><?php echo $questions_row['category']; ?></td>
+                                <td>
+                                  <a class="btn btn-primary" href="./components/edit_question.php?questionid=<?php echo $temp; ?>">Düzenle</a>
+                                  <a class="btn btn-danger" href="./components/delete_question.php?questionid=<?php echo $temp; ?>">Sil</a>
+                                </td>
+                          </tr>
+                          <?php
+                          }
+                        }else{echo "Hiç soru bulunamadı.";}
+                      }
+                       ?>
 
-                            </td>
-                        <?php
-                        }
-                           }else{echo "Hiç soru bulunamadı."; }
-                        ?>
                     </tbody>
                 </table><br>
                 </div>

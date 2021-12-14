@@ -3,14 +3,14 @@
     include_once 'connect.php';
 
       if(isset($_POST["submit"])){
-          $paper_name = trim($_POST["paper_name"]);
-          $min_pass_score = trim($_POST["min_pass_score"]);
-          $mark_per_question = trim ($_POST["mark_per_question"]);
-          $paper_duration = trim($_POST["paper_duration"]);
-          $start_date = trim($_POST["start_date"]);
-          $end_date = trim ($_POST["end_date"]);
+          $paper_name =$_POST["paper_name"];
+          $min_pass_score = $_POST["min_pass_score"];
+          $mark_per_question = $_POST["mark_per_question"];
+          $paper_duration = $_POST["paper_duration"];
+          $start_date = $_POST["start_date"];
+          $end_date = $_POST["end_date"];
           $paper_cat = $_POST["category"];
-          $questionIds =($_POST["questionIds"]);
+          $questionIds =$_POST["questionIds"];
         }
       $us_cat = $_SESSION['userCategory'];
       $categories = explode(",", $us_cat);
@@ -50,11 +50,11 @@
                         </thead>
                         <tbody>
                             <?php
-
-                                $result = mysqli_query($link, "SELECT paper_id,paper_name, paper_duration, start_date, end_date, category FROM papers");
-                                if($result -> num_rows > 0){
+                              for ($i = 0; $i < count($categories); $i++){
+                                $result = mysqli_query($link, "SELECT paper_id, paper_name, paper_duration, start_date, end_date, category FROM papers WHERE category = '$categories[$i]'");
+                                  if($result -> num_rows > 0){
                                     while($row = mysqli_fetch_array($result)){
-                                        $temp=$row['paper_id'];
+                                      $temp=$row['paper_id'];
 
                             ?>
                                 <tr>
@@ -69,10 +69,9 @@
                                 </tr>
                                 <?php
 
-                                    }
-                                    }else{
-                                        echo "Hiç soru kağıdı bulunamadı.";
-                                    }
+                                }
+                              } //else{echo "Hiç soru kağıdı bulunamadı.";}
+                                  }
                                     //$link ->close();
                                 ?>
                         </tbody>
@@ -82,7 +81,7 @@
                 <div id="menu1" class="container tab-pane fade">
                     <br>
                     <h4>Yeni Kağıt</h4>
-                      <form method="post" id="paper" action="./components/add_paper.php ?>">
+                      <form method="post" action="./components/add_paper.php">
 
                         <div class="row">
                             <div class="col">
@@ -117,7 +116,7 @@
                         </div>
                         <div>
                            <select name="category" style="float:left">
-                           <option value="" disabled selected>Sınav Kategorisi</option>
+                           <option value="" disabled selected>Ders Seçiniz</option>
                             <?php
                               $i = 0;
                               for($i; $i<count($categories); $i++){
@@ -147,8 +146,8 @@
                                     </thead>
                                     <tbody>
                                       <?php
-
-                                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions");
+                                          for ($i = 0; $i < count($categories); $i++){
+                                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions WHERE category = '$categories[$i]'");
                                             if($records -> num_rows >0){
                                                 while($row = mysqli_fetch_array($records)){
                                                   if($row["correct_answer"]==0){
@@ -176,8 +175,7 @@
                                         <?php
                                                 }
                                           }else{echo "Hiç soru bulunamadı."; }
-
-
+                                        }
                                         ?>
                                     </tbody>
                                 </table>

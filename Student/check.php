@@ -42,7 +42,7 @@
                         if(mysqli_stmt_fetch($stmt)){
                             if(password_verify($password, $hashed_password)){
                                 $_SESSION['pid'] = $paper_id;
-                                header("location: http://localhost/exam/Student/examPage.php");
+                                header("location: http://localhost/exam/exam.html");
                             } else{
                                 // Password is not valid, display a generic error message
                                 $login_err = "Geçersiz Email veya şifre.";
