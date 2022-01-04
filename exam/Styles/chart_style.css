@@ -1,4 +1,7 @@
-
+.marginCenter{
+  margin-left: auto;
+  margin-right: auto;
+}
 .pie{
 	text-align: center;
   width: 335px;

@@ -3,10 +3,8 @@
     include_once 'connect.php';
 
     $name = $_SESSION['name'];
-    $_SESSION['name'] = $name;
     $surname = $_SESSION['surname'];
-    $_SESSION['surname'] = $surname;
-    $countJoin = $countNotJoin = $countPass = $countFail = $countPaper = $countQuestions = $b = $s_id = 0 ;
+    $count1 = $count2 = $countPass1 = $countFail1 = $countPass2 = $countFail2 = $countPaper = $countQuestions = $s_id = $countTotalStd = $countTotalPass = $countTotalFail = 0 ;
     $status = " ";
     $cat = $_SESSION["userCategory"];
     $categories = explode("," , $cat);
@@ -20,52 +18,62 @@
         $s_id = $row['s_id'];
         $s_questions = $row['s_questions'];
         $status = $row['status'];
-        $category = $row['category'];
+        $category= $row['category'];
         }
       }
-    }
-
-    $records = mysqli_query($link,"SELECT count(id) as countSec_id FROM users WHERE second_id = 0 ");
-    $data=mysqli_fetch_assoc($records);
-    $data['countSec_id'];
-
-    for($i = 0; $i < count($categories); $i++){
-    $result = mysqli_query($link,"SELECT count(paper_id) as countPapers_id FROM papers WHERE category = '$categories[$i]'");
-    $countPapers = mysqli_fetch_array($result);
-    $countPaper = $countPapers['countPapers_id'] + $countPaper ;
      }
 
-     for($i = 0; $i < count($categories); $i++){
-     $result1 = mysqli_query($link,"SELECT count(question_id) as countQuestion_id FROM questions WHERE category = '$categories[$i]'");
+     $val1 = $categories[0] ;
+     $val2 = $categories[1] ;
+
+     $record1 = mysqli_query($link,"SELECT count(id) as countStatus_id FROM questions_answers WHERE category = '$val1'");
+     $data1 = mysqli_fetch_array($record1);
+     $count1 = $data1['countStatus_id'] + $count1;
+
+     $record2 = mysqli_query($link,"SELECT count(id) as countStatus_id FROM questions_answers WHERE category = '$val2'");
+     $data2 = mysqli_fetch_array($record2);
+     $count2 = $data2['countStatus_id'] + $count2;
+
+     $record3 = mysqli_query($link,"SELECT count(id) as countStatus_id FROM questions_answers WHERE category = '$val1' AND status = 'Başarılı'");
+     $data3 = mysqli_fetch_array($record3);
+     $countPass1 = $data3['countStatus_id'] + $countPass1;
+
+     $record4 = mysqli_query($link,"SELECT count(id) as countStatus_id FROM questions_answers WHERE category = '$val2' AND status = 'Başarılı'");
+     $data4 = mysqli_fetch_array($record4);
+     $countPass2 = $data4['countStatus_id'] + $countPass2;
+
+     $record5 = mysqli_query($link,"SELECT count(id) as countStatus_id FROM questions_answers WHERE category = '$val1' AND status = 'Başarısız'");
+     $data5 = mysqli_fetch_array($record5);
+     $countFail1 = $data5['countStatus_id'] + $countFail1;
+
+     $record6 = mysqli_query($link,"SELECT count(id) as countStatus_id FROM questions_answers WHERE category = '$val2' AND status = 'Başarısız'");
+     $data6 = mysqli_fetch_array($record6);
+     $countFail2 = $data6['countStatus_id'] + $countFail2;
+
+     $countTotalStd = $count1 + $count2;
+     $countTotalPass = $countPass1 + $countPass2;
+     $countTotalFail = $countFail1 + $countFail2;
+
+     for($y = 0; $y < count($categories); $y++){
+     $result = mysqli_query($link,"SELECT count(paper_id) as countPapers_id FROM papers WHERE category = '$categories[$y]'");
+     $countPapers = mysqli_fetch_array($result);
+     $countPaper = $countPapers['countPapers_id'] + $countPaper ;
+     }
+
+     for($a = 0; $a < count($categories); $a++){
+     $result1 = mysqli_query($link,"SELECT count(question_id) as countQuestion_id FROM questions WHERE category = '$categories[$a]'");
      $countQuestion = mysqli_fetch_array($result1);
      $countQuestions = $countQuestion['countQuestion_id'] + $countQuestions ;
       }
      if ($s_id > 0) {
-     $result1 = mysqli_query($link,"SELECT name, surname FROM users WHERE id = $s_id");
-     if($result1 -> num_rows > 0){
-       while($rows = mysqli_fetch_array($result1)){
+     $result2 = mysqli_query($link,"SELECT name, surname FROM users WHERE id = $s_id");
+     if($result2 -> num_rows > 0){
+       while($rows = mysqli_fetch_array($result2)){
          $name = $rows['name'];
          $surname = $rows['surname'];
        }
      }
-   } else {$s_id = "";}
-
-      for($i = 0; $i < count($categories); $i++){
-        if ($category === $categories[$i]){
-          $countJoin = $data['countSec_id'] + $countJoin;
-        }else {$countNotJoin = $data['countSec_id'] - $countJoin;}
-      }
-    /*  if($s_id > 0){
-        $countJoin = $data['countSec_id'] + $countJoin;
-      }else {$countNotJoin = $data['countSec_id'] - $countJoin;} */
-
-
-
-    if($status == "Başarılı"){
-      $countPass++;
-    }else if($status == "Başarısız"){
-      $countFail++;
-    }
+    } else {$s_id = "";}
        $cat_labels = json_encode($categories);
 ?>
   <html>
@@ -89,19 +97,7 @@
                                             <div class="widget-heading">Sınavlara katılan öğrenci sayısı</div>
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-numbers text-success"><span><?php echo $countJoin ?></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-4">
-                                <div class="card mb-3 widget-content">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left">
-                                            <div class="widget-heading">Sınavlara katılmayan öğrenci sayısı</div>
-                                        </div>
-                                        <div class="widget-content-right">
-                                            <div class="widget-numbers text-primary"><span><?php echo $countNotJoin ?></span></div>
+                                            <div class="widget-numbers text-success"><span><?php echo $countTotalStd ?></span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -113,7 +109,7 @@
                                             <div class="widget-heading">Sınavlarda başarılı olan öğrenci sayısı</div>
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-numbers text-warning"><span><?php echo $countPass; ?></span></div>
+                                            <div class="widget-numbers text-warning"><span><?php echo $countTotalPass; ?></span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -125,11 +121,12 @@
                                             <div class="widget-heading">Sınavlarda başarısız olan öğrenci sayısı</div>
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-numbers text-danger"><span><?php echo $countFail; ?></span></div>
+                                            <div class="widget-numbers text-danger"><span><?php echo $countTotalFail; ?></span></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="col-lg-6 col-xl-4">
                                 <div class="card mb-3 widget-content">
                                     <div class="widget-content-wrapper">
@@ -202,11 +199,11 @@
                                             $category = $rowCat['category'];
                                        ?>
                                           <tr>
-                                            <td><?php echo $name, " " ,$surname;?></td>
+                                            <td><?php echo $name, " " ,$surname ?></td>
                                             <td></td>
-                                            <td><?php echo $status; ?></td>
-                                            <td><?php echo $mark; ?></td>
-                                            <td><?php echo $category; ?></td>
+                                            <td><?php echo $status ?></td>
+                                            <td><?php echo $mark ?></td>
+                                            <td><?php echo $category ?></td>
                                           </tr>
                                           <?php
                                         }
@@ -236,17 +233,12 @@ var  totalStudent = new Chart(totalStudent, {
     data: {
         labels:<?php echo $cat_labels; ?>,
         datasets: [{
-            label: ["Sınava Katıldı"],
-            data:[<?php echo $countJoin ?>],
-            backgroundColor: ['rgba(0,255,0,1)'],
-
-        },
-        {
-            label: ["Sınava Katılmadı"],
-            data:[<?php echo $countNotJoin ?>],
-            backgroundColor: ['rgba(10,31,248,0.7)']
-    }]
+            label: ["Katılım Durumu"],
+            data:[<?php echo $count1 ?>,<?php echo $count2 ?> ],
+            backgroundColor: ['rgba(0,255,0,1)','rgba(169,33,128,1)']
+        }],
 }
+
 });
 
       var examStatus = new Chart(examStatus, {
@@ -257,15 +249,14 @@ var  totalStudent = new Chart(totalStudent, {
    ,
    datasets: [{
        label:["Başarılı"],
-       data:[<?php echo $countPass ?>],
-       backgroundColor: ['rgba(246,204,15,1)']
+       data:[<?php echo $countPass1 ?>,<?php echo $countPass2 ?>],
+       backgroundColor: ['rgba(54,153,141,1)','rgba(54,153,141,1)']
    },
    {
        label:["Başarısız"],
-       data:[<?php echo $countFail ?>],
-       backgroundColor: ['rgba(247,25,5,1)']
-   }
- ]
+       data:[<?php echo $countFail1 ?>,<?php echo $countFail2 ?>],
+       backgroundColor: ['rgba(223,112,43,1)','rgba(223,112,43,1)']
+   }]
 
 }
 
