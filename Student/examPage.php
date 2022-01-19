@@ -85,7 +85,7 @@
       } else if($counter >= $min_pass_score){
         $status = "Başarılı";
       }
-        $sql = "INSERT INTO questions_answers (name, surname, paper_id, s_id, s_questions, answers, answer_key, status, mark, category) VALUES ('$name', '$surname', '$pid', '$user_id', '$questions', '$chk', '$chk2', '$status', '$counter', '$paper_cat')";
+        $sql = "INSERT INTO questions_answers (name, surname, paper_id, paper_name, s_id, s_questions, answers, answer_key, s_status, mark, category) VALUES ('$name', '$surname', '$pid','$paper_name', '$user_id', '$questions', '$chk', '$chk2', '$status', '$counter', '$paper_cat')";
         mysqli_query($link, $sql);
         header("location: papers.php");
     }
@@ -98,7 +98,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     </head>
     <body>
-      <?php echo $chk ?>
+     
         <div class="container pro_content pb-2">
             <blockquote class="blockquote text-right">
                 <p class="mb-0 text-primary"><?php echo $paper_name; ?> Sınavı</p>
@@ -199,7 +199,7 @@
         if (distance < 0) {
             clearInterval(x);
             document.getElementById("demo").innerHTML = "Süreniz doldu.";
-            document.getElementById("examForm").submit();
+            //document.getElementById("examForm").submit();
             //window.location.assign("http://localhost/exam/Student/papers.php");
         }
     }, 1000);

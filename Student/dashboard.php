@@ -13,32 +13,39 @@
        <table class="mb-0 table table-striped">
         <thead>
             <tr>
-              <th>Ders</th>
-              <th>Durum</th>
+              <th>Ders Adı</th>
+              <th>Sınav Durumu</th>
               <th>Puan</th>
+              <th>Kabul Durumu</th>
+              <th>İşlem</th>
             </tr>
         </thead>
         <tbody>
           <?php
 
-          $record = mysqli_query($link,"SELECT * FROM questions_answers WHERE s_id = $user_id");
+          $record = mysqli_query($link,"SELECT * FROM questions_answers WHERE s_id = $user_id ORDER BY Id DESC");
           if($record -> num_rows > 0){
             while($row = mysqli_fetch_array($record)){
               $s_id = $row['s_id'];
               $id = $row["Id"];
               $p_id = $row['paper_id'];
+              $p_name = $row['paper_name'];
               $s_questions = $row['s_questions'];
               $answers = $row['answers'];
               $answer_key = $row['answer_key'];
-              $status = $row['status'];
+              $status = $row['s_status'];
+              $instance = $row['instance'];
               $mark = $row['mark'];
               $category = $row['category'];
-
             ?>
             <tr>
-              <td><?php echo $category ?></td>
+              <td><?php echo $p_name ?></td>
               <td><?php echo $status ?></td>
               <td><?php echo $mark ?></td>
+              <td><?php echo $instance ?></td>
+              <td>
+                <a class="btn btn-primary" href="../components/studentdetay.php?paperid=<?php echo $p_id; ?>">Sınav Detayları</a>
+              </td>
             </tr>
             <?php
           }

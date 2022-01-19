@@ -50,13 +50,14 @@
         <h4>Soru Düzenle</h4>
 
             <?php
-                $result = mysqli_query($link, "SELECT question, answer1, answer2, answer3, answer4, correct_answer , category FROM questions WHERE question_id=$id");
+                $result = mysqli_query($link, "SELECT question, answer1, answer2, answer3, answer4, answer5, correct_answer , category FROM questions WHERE question_id=$id");
                 while ($row = mysqli_fetch_assoc($result)) {
                     $question = $row["question"];
                     $answer1 = $row["answer1"];
                     $answer2 = $row["answer2"];
                     $answer3 = $row["answer3"];
                     $answer4 = $row["answer4"];
+                    $answer5 = $row["answer5"];
                     $correct_answer = $row["correct_answer"];
                     $category = $row["category"];
                 }
@@ -68,14 +69,14 @@
                         <input type="hidden" class="form-control" name="id2" value="<?php echo $id; ?>"></input>
                     </div>
                     <select name="Category" style="float:right">
-                    <option value="" disabled selected><?php echo $category ?></option>
+                    <option value="<?php echo $category ?>" selected><?php echo $category ?></option>
                     <?php
-                    $i = 0;
-                    for($i; $i<count($categories); $i++){
-                      echo "<option value='$categories[$i]'>";
-                      echo $categories[$i];
-                      echo "</option>";
-                    }
+                        $i = 0;
+                        for($i; $i<count($categories); $i++){
+                        echo "<option value='$categories[$i]'>";
+                        echo $categories[$i];
+                        echo "</option>";
+                        }
                     ?>
                   </select>
                     <div class="form-group">
@@ -105,6 +106,12 @@
                         <input type="radio" name="correct_answer_d" value="3" <?php if($correct_answer==3) print("checked"); ?>>
                         <label for="correct_answer">Doğru cevap</label>
                         <textarea class="form-control" rows="4" name="answer4_d"><?php echo $answer4; ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>E)</label></br>
+                        <input type="radio" name="correct_answer_d" value="4" <?php if($correct_answer==4) print("checked"); ?>>
+                        <label for="correct_answer">Doğru cevap</label>
+                        <textarea class="form-control" rows="4" name="answer5_d"><?php echo $answer5; ?></textarea>
                     </div>
                     <button class="btn btn-primary" type="submit" name="update" >Güncelle</button>
                 </form>

@@ -17,14 +17,14 @@
         $result = mysqli_query($link,$sql);
         $fetch_result = mysqli_fetch_array($result);
         $hashed_pass = $fetch_result['pass'];
-        $verify = password_verify($old_pass,$hashed_pass);
-        if($verify){
+      
+        if($old_pass==$hashed_pass){
 
             if(empty(trim($_POST["password"]))){
                 $new_pass_err = "Şifre alanı boş bırakılamaz.";
             }else{
                 $new_password = trim($_POST["password"]);
-                $param_password = password_hash($new_password,PASSWORD_DEFAULT);
+                $param_password = $new_password;
                 $sql2 = "UPDATE users SET pass = '$param_password' WHERE id = $_POST[id2]";
                 $result2 = mysqli_query($link,$sql2);
                 echo "<script>alert('Şifreniz başarıyla güncellenmiştir.');</script>";
