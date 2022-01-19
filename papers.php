@@ -16,6 +16,24 @@
       $categories = explode(",", $us_cat);
 ?>
 
+<script>
+function showUser(str) {
+  if (str == "") {
+    document.getElementById("txtHint").innerHTML = "";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("txtHint").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET","./components/getQuestionsForNewPaper.php?q="+ str,true);
+    xmlhttp.send();
+  }
+}
+</script>
+
   <!--Content-->
 <div class="content">
     <section>
@@ -116,7 +134,7 @@
                         </div>
                         <div>
                             
-                           <select name="category" style="float:left">
+                           <select name="category" style="float:left" onchange="showUser(this.value)">
                            <option value="" disabled selected>Ders Seçiniz</option>
                             <?php
                               $i = 0;
@@ -135,7 +153,7 @@
 
                         <div class="form-group" style="float:left">
                          <p>Eklemek istediğiniz soruları seçerek oluştur butonuna basınız.</p>
-                            <div class="mt-3" id="list_question" style="heigth=auto;">
+                            <div class="mt-3" id="txtHint" style="heigth=auto;">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
