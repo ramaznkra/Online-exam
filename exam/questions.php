@@ -17,6 +17,23 @@ require_once "connect.php";
     $teach_cat = $_SESSION["userCategory"];
     $categories = explode(",", $teach_cat);
 ?>
+<script>
+function showUser(str) {
+  if (str == "") {
+    document.getElementById("txtHint").innerHTML = "";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("txtHint").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET","./components/getQuestionInsideQuestion.php?q="+ str,true);
+    xmlhttp.send();
+  }
+}
+</script>
 
   <!--Content-->
   <div class="content">
@@ -38,9 +55,48 @@ require_once "connect.php";
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div id="home" class="container tab-pane active"><br>
-                    <h4>Sorular</h4>
-                    <table class="table table-striped">
+                <div id="home" class="container tab-pane active">
+                <br>
+                <div style="display: flex;justify-content: space-between;">
+                    <div><h4>Sorular</h4></div>
+                    <div>
+                        <?php
+                        if(count($categories)>1){
+                        ?>
+                        <select onchange="showUser(this.value)">
+                           <option value="">Ders Seçiniz</option>
+                            <?php
+                                $i=0;
+                                for($i; $i<count($categories); $i++){
+                                    echo "<option value='$categories[$i]'>";
+                                    echo $categories[$i];
+                                    echo "</option>";
+                                }
+                            ?>
+                        </select>
+                        <?php
+                        }else{
+                        ?>
+                            <select onchange="showUser(this.value)" style="display:none;">
+                           <option value="">Ders</option>
+                            <?php
+                                $i=0;
+                                for($i; $i<count($categories); $i++){
+                                    echo "<option value='$categories[$i]'>";
+                                    echo $categories[$i];
+                                    echo "</option>";
+                                }
+                            ?>
+                        </select>
+                        <?php
+                        }
+                        ?>
+
+                    </div>
+                </div>
+
+
+                  <table id=txtHint class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">Soru</th>
@@ -56,7 +112,7 @@ require_once "connect.php";
                         if($questions_record -> num_rows > 0){
                           while($questions_row = mysqli_fetch_array($questions_record)){
                             if($questions_row["correct_answer"] == 0){
-                                        $letter_anser = "A";
+                                        $letter_answer = "A";
                                     }else if($questions_row["correct_answer"] == 1){
                                         $letter_answer = "B";
                                     }else if($questions_row["correct_answer"] == 2){
@@ -82,7 +138,9 @@ require_once "connect.php";
                        ?>
 
                     </tbody>
-                </table><br>
+                    </table><br>
+
+
                 </div>
                 <div id="menu1" class="container tab-pane fade"><br>
                     <h4>Yeni soru</h4>
@@ -135,7 +193,7 @@ require_once "connect.php";
                                     <textarea class="form-control" rows="4" name="answer5"></textarea>
                                 </div>
                                 <button class="btn btn-primary" type="submit" name="submit">Kaydet</button>
-
+                                <a href="questions.php" class="btn btn-danger">İptal</a>
                             </form>
                         </div>
                     </div>

@@ -16,6 +16,24 @@
       $categories = explode(",", $us_cat);
 ?>
 
+<script>
+function showUser(str) {
+  if (str == "") {
+    document.getElementById("txtHint").innerHTML = "";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("txtHint").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET","./components/getQuestionsForNewPaper.php?q="+ str,true);
+    xmlhttp.send();
+  }
+}
+</script>
+
   <!--Content-->
 <div class="content">
     <section>
@@ -51,7 +69,7 @@
                         <tbody>
                             <?php
                               for ($i = 0; $i < count($categories); $i++){
-                                $result = mysqli_query($link, "SELECT paper_id, paper_name, paper_duration, start_date, end_date, category FROM papers WHERE category = '$categories[$i]'");
+                                $result = mysqli_query($link, "SELECT paper_id, paper_name, paper_duration, start_date, end_date, category FROM papers WHERE category = '$categories[$i]' ORDER BY paper_id DESC");
                                   if($result -> num_rows > 0){
                                     while($row = mysqli_fetch_array($result)){
                                       $temp=$row['paper_id'];
@@ -115,7 +133,8 @@
                             </div>
                         </div>
                         <div>
-                           <select name="category" style="float:left">
+
+                           <select name="category" style="float:left" onchange="showUser(this.value)">
                            <option value="" disabled selected>Ders Seçiniz</option>
                             <?php
                               $i = 0;
@@ -128,13 +147,14 @@
                         </select>
                       </div>
                         <div class="form-group">
-                            <button class="btn btn-primary mb-5" style="float:right" name="submit" type="submit">Oluştur</button>
+                            <a href="papers.php" style="float:right" class="btn btn-danger">İptal</a>
+                            <button class="btn btn-primary mr-1" style="float:right" name="submit" type="submit">Oluştur</button>
 
                         </div>
 
                         <div class="form-group" style="float:left">
                          <p>Eklemek istediğiniz soruları seçerek oluştur butonuna basınız.</p>
-                            <div class="mt-3" id="list_question" style="heigth=auto;">
+                            <div class="mt-3" id="txtHint" style="heigth=auto;">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
@@ -147,7 +167,7 @@
                                     <tbody>
                                       <?php
                                           for ($i = 0; $i < count($categories); $i++){
-                                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions WHERE category = '$categories[$i]'");
+                                            $records = mysqli_query ($link,"SELECT question_id, question, correct_answer, category FROM questions WHERE category = '$categories[$i]' ");
                                             if($records -> num_rows >0){
                                                 while($row = mysqli_fetch_array($records)){
                                                   if($row["correct_answer"]==0){
@@ -167,8 +187,8 @@
                                             <td><?php echo $row['category']; ?></td>
                                             <td>
                                               <input type="checkbox"
-                                                        value="<?php echo $row['question_id']; ?>"
-                                                        name="questionIds[]"
+                                                    value="<?php echo $row['question_id']; ?>"
+                                                    name="questionIds[]"
                                                 />
                                             </td>
 

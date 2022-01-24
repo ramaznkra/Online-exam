@@ -52,7 +52,7 @@
                         // Bind result variables
                         mysqli_stmt_bind_result($stmt, $id, $name,$surname, $email, $hashed_password,$second_id,$created_date,$userimage,$category);
                         if(mysqli_stmt_fetch($stmt)){
-                            if(password_verify($password, $hashed_password)){
+                          if($password == $hashed_password){
                                 // Password is correct, so start a new session
                                 session_start();
 
@@ -75,9 +75,6 @@
                                     header("location: Student/index.php");
                                     exit;
                                 }
-                            } else{
-                                // Password is not valid, display a generic error message
-                                $login_err = "Geçersiz Email veya şifre.";
                             }
                         }
                     } else{

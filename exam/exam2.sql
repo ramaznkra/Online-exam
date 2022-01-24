@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 23 Kas 2021, 13:24:29
--- Sunucu sürümü: 10.4.20-MariaDB
--- PHP Sürümü: 8.0.9
+-- Üretim Zamanı: 19 Oca 2022, 07:46:44
+-- Sunucu sürümü: 10.4.22-MariaDB
+-- PHP Sürümü: 8.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,39 @@ SET time_zone = "+00:00";
 --
 -- Veritabanı: `exam`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(150) NOT NULL,
+  `std_id` int(123) NOT NULL,
+  `status` varchar(150) NOT NULL,
+  `eyes_movement` varchar(200) NOT NULL,
+  `phone_detected` varchar(100) NOT NULL,
+  `person_detected` varchar(100) NOT NULL,
+  `img_log` varchar(189) NOT NULL,
+  `date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Tablo döküm verisi `logs`
+--
+
+INSERT INTO `logs` (`id`, `std_id`, `status`, `eyes_movement`, `phone_detected`, `person_detected`, `img_log`, `date`) VALUES
+(1, 7, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:51'),
+(2, 7, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:53'),
+(3, 7, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:54'),
+(4, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:54'),
+(6, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:56'),
+(7, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:56'),
+(9, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:58'),
+(16, 7, 'Normal', 'Saga Bakiyor', 'Normal', 'Normal', 'None', '2022-01-06 10:30:02'),
+(17, 7, 'Normal', 'Saga Bakiyor', 'Normal', 'Normal', 'None', '2022-01-06 10:30:03'),
+(18, 7, 'Normal', 'Sola Bakiyor', 'Normal', 'Normal', 'None', '2022-01-06 10:30:04');
 
 -- --------------------------------------------------------
 
@@ -44,15 +77,10 @@ CREATE TABLE `papers` (
 --
 
 INSERT INTO `papers` (`paper_id`, `paper_name`, `min_pass_score`, `mark_per_question`, `paper_duration`, `start_date`, `end_date`, `category`, `questions`) VALUES
-(1, 'Coğrafya Quiz 1', 50, 20, 10, '2021-11-15 10:00:00', '2021-11-15 10:10:00', 'Coğrafya', '16,17,18,19,20,'),
-(2, 'Anayasa 1', 50, 10, 60, '2021-11-11 10:00:00', '2021-11-11 11:00:00', 'Anayasa', '11,12,13,14,15,'),
-(3, 'Matematik 1', 40, 20, 50, '2021-11-23 11:07:00', '2021-11-23 13:00:00', 'Matematik', '2,3,4,5,'),
-(4, 'mat2', 50, 20, 50, '2021-11-15 11:00:00', '2021-11-15 11:50:00', 'Matematik', '1,2,3,'),
-(5, 'mat2', 50, 5, 50, '2021-11-15 11:00:00', '2021-11-15 11:50:00', 'Matematik', '1,2,3,'),
-(6, 'Matematik sınavı', 50, 5, 20, '2021-11-25 10:00:00', '2021-11-25 10:20:00', 'Matematik', '1,2,3,4,5,'),
-(7, 'Coğrafya Quiz 2', 50, 15, 50, '2021-11-25 10:00:00', '2021-11-25 10:50:00', 'Coğrafya', '16,17,18,19,20,'),
-(8, 'mat5', 50, 20, 50, '2021-11-25 10:00:00', '2021-11-25 10:50:00', 'Matematik', '1,'),
-(9, 'denemeanayasa', 40, 15, 50, '2021-11-23 16:17:00', '2021-11-23 17:17:00', 'Anayasa', '11,12,13,14,');
+(1, 'Türkçe 3', 50, 10, 60, '2022-01-18 14:53:00', '2022-01-18 15:53:00', 'Türkçe', '6,7,8,'),
+(2, 'Anayasa 2', 40, 15, 50, '2021-11-23 16:17:00', '2021-11-23 17:17:00', 'Anayasa', '11,12,13,'),
+(3, 'Türkçe 1', 60, 20, 60, '2021-12-30 13:28:00', '2021-12-30 14:28:00', 'Türkçe', '6,7,10,'),
+(12, 'Mat4', 30, 30, 60, '2022-01-17 10:25:00', '2022-01-17 10:31:00', 'Matematik', '11,');
 
 -- --------------------------------------------------------
 
@@ -95,7 +123,8 @@ INSERT INTO `questions` (`question_id`, `question`, `answer1`, `answer2`, `answe
 (17, 'Türkiye, bugünkü görünümünü büyük ölçüde 3. ve 4 Jeolojik Zaman\'da kazanmış genç oluşumlu bir ülkedir.\r\n\r\nAşağıdakilerden hangisi yalnızca yukarıdaki bilgiye göre açıklanamaz?', 'Kırıklı yer yapısının yaygın olması\r\n', 'Ortalama yükseltisinin fazla olması\r\n', 'Dağların doğu-batı yönlü uzanması\r\n', 'Termal kaynakların yaygın olması\r\n', 'Akarsuların denge profilinden uzak olması\r\n', 2, 'Coğrafya'),
 (18, 'Türkiye\'nin iklim özellikleri düşünüldüğünde,\r\n\r\nI. bozkır,\r\n\r\nII. çayır,\r\n\r\nIII. maki,\r\n\r\nIV. orman,\r\n\r\nV. psödomaki\r\n\r\ngibi bitki örtülerinden hangisinin daha geniş alanda görüldüğü söylenebilir?', 'I', 'II', 'III', 'IV', 'V', 0, 'Coğrafya'),
 (19, 'Türkiye\'de kırsal kesimden kentlere doğru gerçekleşen göçlerin nedenleri arasında aşağıdakilerden hangisi yer almaz?', 'Makineli tarımın yaygınlaşması\r\n', 'Tarım arazilerinin miras yoluyla bölünmesi\r\n', 'Kırsal kesimde iş imkânlarının kısıtlı olması\r\n', 'Nüfus artışının hızlı olması\r\n', 'Kırsal kesimde toprak çeşitliliğinin az olması\r\n', 4, 'Coğrafya'),
-(20, 'Geçimini tarım sektöründen sağlayan nüfusun toplam tarım alanlarına bölünmesiyle tarımsal nüfus yoğunluğu bulunur. Türkiye\'de bu yoğunluk bölgelere göre farklılık gösterir.\r\n\r\nBuna göre, bu farklılığı oluşturan nedenler arasında,\r\n\r\nI. yer şekilleri,\r\n\r\nII. tarımla uğraşan nüfusun tarıma bakış açısı,\r\n\r\nIII. tarıma elverişli sahaların yüz ölçümü\r\n\r\nfaktörlerinden hangileri yer almaz?', 'Yalnız I', 'Yalnız II', 'Yalnız III', 'I ve II', 'II ve III', 1, 'Coğrafya');
+(20, 'Geçimini tarım sektöründen sağlayan nüfusun toplam tarım alanlarına bölünmesiyle tarımsal nüfus yoğunluğu bulunur. Türkiye\'de bu yoğunluk bölgelere göre farklılık gösterir.\r\n\r\nBuna göre, bu farklılığı oluşturan nedenler arasında,\r\n\r\nI. yer şekilleri,\r\n\r\nII. tarımla uğraşan nüfusun tarıma bakış açısı,\r\n\r\nIII. tarıma elverişli sahaların yüz ölçümü\r\n\r\nfaktörlerinden hangileri yer almaz?', 'Yalnız I', 'Yalnız II', 'Yalnız III', 'I ve II', 'II ve III', 1, 'Coğrafya'),
+(23, '10-10x10+10=?', '90', '100', '-80', '80', '-120', 2, 'Matematik');
 
 -- --------------------------------------------------------
 
@@ -105,12 +134,17 @@ INSERT INTO `questions` (`question_id`, `question`, `answer1`, `answer2`, `answe
 
 CREATE TABLE `questions_answers` (
   `Id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `surname` varchar(50) NOT NULL,
   `paper_id` int(11) NOT NULL,
+  `paper_name` varchar(50) NOT NULL,
   `s_id` int(11) NOT NULL,
   `s_questions` varchar(1000) NOT NULL,
   `answers` varchar(20) NOT NULL,
   `answer_key` varchar(20) NOT NULL,
-  `status` varchar(20) NOT NULL,
+  `s_status` varchar(20) NOT NULL,
+  `instance` varchar(20) NOT NULL,
+  `mark` int(10) NOT NULL,
   `category` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -118,9 +152,17 @@ CREATE TABLE `questions_answers` (
 -- Tablo döküm verisi `questions_answers`
 --
 
-INSERT INTO `questions_answers` (`Id`, `paper_id`, `s_id`, `s_questions`, `answers`, `answer_key`, `status`, `category`) VALUES
-(1, 9, 3, '11,12,13,14,', 'B,A,B,E,', 'B,A,C,C,', 'kaldı', 'Anayasa'),
-(2, 9, 3, '11,12,13,14,', 'B,A,C,C,', 'B,A,C,C,', 'geçti', 'Anayasa');
+INSERT INTO `questions_answers` (`Id`, `name`, `surname`, `paper_id`, `paper_name`, `s_id`, `s_questions`, `answers`, `answer_key`, `s_status`, `instance`, `mark`, `category`) VALUES
+(1, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,15,', 'B,A,C,C,D,', 'B,A,C,C,D,', 'Başarılı', 'Geçerli', 50, 'Anayasa'),
+(2, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,15,', 'A,B,C,D,E,', 'B,A,C,C,D,', 'Başarısız', 'Geçersiz', 10, 'Anayasa'),
+(3, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,15,', 'B,A,C,C,D,', 'B,A,C,C,D,', 'Başarılı', 'Geçerli', 50, 'Anayasa'),
+(7, 'Çiğdem', 'Aktay', 3, 'Türkçe 1', 5, '6,7,8,10,', 'D,E,D,C,', 'D,E,D,C,', 'Başarılı', 'Geçerli', 80, 'Türkçe'),
+(8, 'Yusuf', 'Coşkun', 3, 'Türkçe 1', 3, '6,7,8,10,', 'D,E,D,C,', 'D,E,D,C,', 'Başarılı', '', 80, 'Türkçe'),
+(10, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,', 'A,A,A,BOS,', 'B,A,C,C,', 'Başarısız', '', 15, 'Anayasa'),
+(11, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,', 'A,E,B,D,', 'B,A,C,C,', 'Başarısız', '', 0, 'Anayasa'),
+(12, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,', 'B,D,BOS,BOS,', 'B,A,C,C,', 'Başarısız', '', 15, 'Anayasa'),
+(13, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'D,E,D,', 'D,E,D,', 'Başarısız', '', 30, 'Türkçe'),
+(14, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'C,BOS,B,', 'D,E,D,', 'Başarısız', '', 0, 'Türkçe');
 
 -- --------------------------------------------------------
 
@@ -137,7 +179,7 @@ CREATE TABLE `users` (
   `second_id` int(11) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `image` mediumtext NOT NULL,
-  `category` varchar(20) NOT NULL
+  `category` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -145,14 +187,23 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `surname`, `email`, `pass`, `second_id`, `created_at`, `image`, `category`) VALUES
-(1, 'Muhammed', 'Ali', 'teacherdemo1@gmail.com', '$2y$10$OOlA6nUTMNeHAPqMme5RFurqO3wSPbOnsVSL7pScrmy/jlGBF6ntu', 1, '2021-10-12 09:53:21', 'http://localhost/exam/upload/pic_20211012085320.jpeg', 'Matematik'),
-(2, 'mehmet ali', 'alabora', 'teacherdemo2@gmail.com', '$2y$10$M5tC73oNrCd2/I/WgweMPuO8GuZ2kYOLRefCla5Cw8llsGbLgOISC', 1, '2021-10-14 15:16:31', 'http://localhost/exam/upload/pic_20211014141630.jpeg', 'Anayasa,Türkçe'),
-(3, 'rasim', 'muslu', 'studentdemo1@gmail.com', '$2y$10$D8Ki86up3/n8X/lqfM9xIO/XE1dmWst2RNBr/NHFchlTfKvGFw.qG', 0, '2021-10-27 09:44:47', '', ''),
-(4, 'murat', 'arslan', 'teacherdemo3@gmail.com', '$2y$10$67pyj2b3yeeyWCsF/wr/xu54zOek/QrKOR6KuMpvdG99bX8g6N1RS', 1, '2021-11-10 16:05:07', 'http://localhost/exam/upload/pic_20211110140506.jpeg', 'Coğrafya,Matematik');
+(1, 'Muhammed', 'Ali', 'teacherdemo1@gmail.com', '123456', 1, '2021-10-12 09:53:21', 'http://localhost/exam/upload/pic_20211012085320.jpeg', 'Matematik'),
+(2, 'mehmet ali', 'alabora', 'teacherdemo2@gmail.com', '123456', 1, '2021-10-14 15:16:31', 'http://localhost/exam/upload/pic_20211014141630.jpeg', 'Anayasa,Türkçe'),
+(3, 'Yusuf', 'Coşkun', 'studentdemo1@gmail.com', '123456', 0, '2021-10-27 09:44:47', '', ''),
+(4, 'murat', 'arslan', 'teacherdemo3@gmail.com', '123456', 1, '2021-11-10 16:05:07', 'http://localhost/exam/upload/pic_20211110140506.jpeg', 'Coğrafya,Matematik'),
+(5, 'Çiğdem', 'Aktay', 'studentdemo2@gmail.com', '123456', 0, '2021-11-29 13:41:41', 'http://localhost/exam/upload/pic_20211129114140.jpeg', ''),
+(6, 'Hüseyin', 'Özgümüş', 'studentdemo3@gmail.com', '123456', 0, '2021-11-30 13:40:34', 'http://localhost/exam/upload/pic_20211130114033.jpeg', ''),
+(7, 'rana', 'bilgi', 'rana@gmail.com', '123456', 0, '2022-01-05 14:24:53', 'http://localhost/exam/upload/pic_20220105122448.jpeg', '');
 
 --
 -- Dökümü yapılmış tablolar için indeksler
 --
+
+--
+-- Tablo için indeksler `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Tablo için indeksler `papers`
@@ -184,28 +235,34 @@ ALTER TABLE `users`
 --
 
 --
+-- Tablo için AUTO_INCREMENT değeri `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(150) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
 -- Tablo için AUTO_INCREMENT değeri `papers`
 --
 ALTER TABLE `papers`
-  MODIFY `paper_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `paper_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `questions_answers`
 --
 ALTER TABLE `questions_answers`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
