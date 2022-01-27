@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 19 Oca 2022, 07:46:44
+-- Üretim Zamanı: 27 Oca 2022, 08:45:42
 -- Sunucu sürümü: 10.4.22-MariaDB
 -- PHP Sürümü: 8.0.13
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Veritabanı: `exam`
+-- Veritabanı: `exam2`
 --
 
 -- --------------------------------------------------------
@@ -30,6 +30,9 @@ SET time_zone = "+00:00";
 CREATE TABLE `logs` (
   `id` int(150) NOT NULL,
   `std_id` int(123) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `surname` varchar(50) NOT NULL,
+  `paper_id` int(20) NOT NULL,
   `status` varchar(150) NOT NULL,
   `eyes_movement` varchar(200) NOT NULL,
   `phone_detected` varchar(100) NOT NULL,
@@ -42,17 +45,17 @@ CREATE TABLE `logs` (
 -- Tablo döküm verisi `logs`
 --
 
-INSERT INTO `logs` (`id`, `std_id`, `status`, `eyes_movement`, `phone_detected`, `person_detected`, `img_log`, `date`) VALUES
-(1, 7, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:51'),
-(2, 7, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:53'),
-(3, 7, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:54'),
-(4, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:54'),
-(6, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:56'),
-(7, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:56'),
-(9, 7, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:58'),
-(16, 7, 'Normal', 'Saga Bakiyor', 'Normal', 'Normal', 'None', '2022-01-06 10:30:02'),
-(17, 7, 'Normal', 'Saga Bakiyor', 'Normal', 'Normal', 'None', '2022-01-06 10:30:03'),
-(18, 7, 'Normal', 'Sola Bakiyor', 'Normal', 'Normal', 'None', '2022-01-06 10:30:04');
+INSERT INTO `logs` (`id`, `std_id`, `name`, `surname`, `paper_id`, `status`, `eyes_movement`, `phone_detected`, `person_detected`, `img_log`, `date`) VALUES
+(1, 5, 'Cigdem', 'Aktay', 2, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:51'),
+(2, 5, 'Cigdem', 'Aktay', 2, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'None', '2022-01-06 10:29:53'),
+(3, 3, 'Yusuf', 'Coskun', 2, 'Bilinmeyen Yüz', 'Normal', 'Normal', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:29:54'),
+(4, 5, 'Cigdem', 'Aktay', 3, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'None', '2022-01-06 10:29:54'),
+(5, 5, 'Cigdem', 'Aktay', 3, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'None', '2022-01-06 10:29:56'),
+(6, 5, 'Cigdem', 'Aktay', 2, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'None', '2022-01-06 10:29:56'),
+(7, 5, 'Cigdem', 'Aktay', 2, 'Normal', 'Normal', 'Cep telefonu algilandi', 'Normal', 'None', '2022-01-06 10:29:58'),
+(8, 3, 'Yusuf', 'Coskun', 2, 'Normal', 'Saga Bakiyor', 'Normal', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:30:02'),
+(9, 3, 'Yusuf', 'Coskun', 1, 'Normal', 'Saga Bakiyor', 'Normal', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:30:03'),
+(10, 3, 'Yusuf', 'Coskun', 1, 'Normal', 'Sola Bakiyor', 'Normal', 'Normal', 'http://localhost/exam/img_logs/phone2.jpg', '2022-01-06 10:30:04');
 
 -- --------------------------------------------------------
 
@@ -156,13 +159,13 @@ INSERT INTO `questions_answers` (`Id`, `name`, `surname`, `paper_id`, `paper_nam
 (1, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,15,', 'B,A,C,C,D,', 'B,A,C,C,D,', 'Başarılı', 'Geçerli', 50, 'Anayasa'),
 (2, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,15,', 'A,B,C,D,E,', 'B,A,C,C,D,', 'Başarısız', 'Geçersiz', 10, 'Anayasa'),
 (3, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,15,', 'B,A,C,C,D,', 'B,A,C,C,D,', 'Başarılı', 'Geçerli', 50, 'Anayasa'),
-(7, 'Çiğdem', 'Aktay', 3, 'Türkçe 1', 5, '6,7,8,10,', 'D,E,D,C,', 'D,E,D,C,', 'Başarılı', 'Geçerli', 80, 'Türkçe'),
-(8, 'Yusuf', 'Coşkun', 3, 'Türkçe 1', 3, '6,7,8,10,', 'D,E,D,C,', 'D,E,D,C,', 'Başarılı', '', 80, 'Türkçe'),
-(10, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,', 'A,A,A,BOS,', 'B,A,C,C,', 'Başarısız', '', 15, 'Anayasa'),
-(11, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,', 'A,E,B,D,', 'B,A,C,C,', 'Başarısız', '', 0, 'Anayasa'),
-(12, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,', 'B,D,BOS,BOS,', 'B,A,C,C,', 'Başarısız', '', 15, 'Anayasa'),
-(13, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'D,E,D,', 'D,E,D,', 'Başarısız', '', 30, 'Türkçe'),
-(14, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'C,BOS,B,', 'D,E,D,', 'Başarısız', '', 0, 'Türkçe');
+(4, 'Çiğdem', 'Aktay', 3, 'Türkçe 1', 5, '6,7,8,10,', 'D,E,D,C,', 'D,E,D,C,', 'Başarılı', 'Geçerli', 80, 'Türkçe'),
+(5, 'Yusuf', 'Coşkun', 3, 'Türkçe 1', 3, '6,7,8,10,', 'D,E,D,C,', 'D,E,D,C,', 'Başarılı', 'Geçersiz', 80, 'Türkçe'),
+(6, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,', 'A,A,A,BOS,', 'B,A,C,C,', 'Başarısız', 'Geçersiz', 15, 'Anayasa'),
+(7, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,', 'A,E,B,D,', 'B,A,C,C,', 'Başarısız', 'Geçersiz', 0, 'Anayasa'),
+(8, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,', 'B,D,BOS,BOS,', 'B,A,C,C,', 'Başarısız', 'Geçerli', 15, 'Anayasa'),
+(9, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'D,E,D,', 'D,E,D,', 'Başarısız', 'Geçersiz', 30, 'Türkçe'),
+(10, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'C,BOS,B,', 'D,E,D,', 'Başarısız', 'Geçersiz', 0, 'Türkçe');
 
 -- --------------------------------------------------------
 
