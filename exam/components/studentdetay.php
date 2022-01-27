@@ -18,23 +18,30 @@
     $s_questionsExp = explode("," , $s_questions);
     $answerKeyExp = explode("," , $answerKey);
     $givenAnswersExp = explode("," , $givenAnswers);
-   
+
 ?>
 <html lang="en" dir="ltr">
     <head>
         <link rel="stylesheet" type="text/css" href="../Styles/style.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     </head>
     <body>
         <div class="container pro_content pb-2">
             <blockquote class="blockquote text-left">
                 <p class="mb-0 text-primary">"<?php echo $paper_name; ?>" Sınav Detayınız</p>
-                
+
             </blockquote>
-            <div class="displayflex borderBottom">
+            <div class=" displayflex borderBottom" style="justify-content: space-between;">
+              <div class="displayflex">
                 <p class="mb-0 text-primary">Sınav Puanınız: &nbsp;</p>
                 <p><?php echo $mark ?></p>
+              </div>
+                <div>
+                  <a href="../Student/dashboard.php" class="btn btn-danger">Geri</a>
+                </div>
             </div>
+
             <div>
                 <?php
                     for($i=0; $i<count($s_questionsExp)-1; $i++){
@@ -60,8 +67,10 @@
                     <ul class="list-group list-group-flush">
                         <?php
                             if($givenAnswersExp[$i] == $answerKeyExp[$i]){
-                                $class="list-group-item bg-success";
+                                $class="list-group-item";
                         ?>
+                            <div class="list-group-flush d-flex">
+                                <i class="far fa-check-circle text-success" style="padding-top:15px;"></i>
                                 <li class="<?php echo $class ?>" style="font-size:14px;">
                                     <?php
                                         if($answerKeyExp[$i]=="A"){
@@ -77,11 +86,14 @@
                                         }
                                     ?>
                                 </li>
+                            </div>
                         <?php
                             }else if($givenAnswersExp[$i] == "BOS"){
                                 $class="list-group-item";
                         ?>
-                                <li class="list-group-item bg-success mb-2" style="font-size:14px;">
+                            <div class="list-group-flush d-flex">
+                                <i class="far fa-check-circle text-success" style="padding-top:15px;"></i>
+                                <li class="list-group-item mb-2" style="font-size:14px;">
                                     <?php
                                         if($answerKeyExp[$i]=="A"){
                                             echo $answer1;
@@ -96,13 +108,20 @@
                                         }
                                     ?>
                                 </li>
+                            </div>
+
+                            <div class="list-group-flush d-flex">
+                                <i class="far fa-circle text-secondary" style="padding-top:15px;"></i>
                                 <li class="<?php echo $class ?>" style="font-size:14px;">
                                     <?php echo "Boş Bırakılan Soru." ;?>
                                 </li>
+                            </div>
                         <?php
                             }else if($givenAnswersExp[$i] != $answerKeyExp[$i]){
                         ?>
-                                <li class="list-group-item bg-success mb-2" style="font-size:14px;">
+                            <div class="list-group-flush d-flex">
+                                <i class="far fa-check-circle text-success" style="padding-top:15px;"></i>
+                                <li class="list-group-item mb-2" style="font-size:14px;">
                                     <?php
                                         if($answerKeyExp[$i]=="A"){
                                             echo $answer1;
@@ -117,7 +136,10 @@
                                         }
                                     ?>
                                 </li>
-                                <li class="list-group-item bg-danger" style="font-size:14px;">
+                            </div>
+                            <div class="list-group-flush d-flex">
+                                <i class="far fa-times-circle text-danger" style="padding-top:15px;"></i>
+                                <li class="list-group-item" style="font-size:14px;">
                                     <?php
                                         if($givenAnswersExp[$i]=="A"){
                                             echo $answer1;
@@ -132,12 +154,13 @@
                                         }
                                     ?>
                                 </li>
-                        
+                            </div>
+
                         <?php
                            }
-                          
+
                         ?>
-                                
+
                     </ul>
                 </div>
                 <?php
@@ -146,14 +169,14 @@
                 ?>
 
             </div>
-           
-            
 
-            
+
+
+
         </div>
-        
+
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
-        
+
     </body>
 </html>
