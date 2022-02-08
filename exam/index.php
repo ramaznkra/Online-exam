@@ -50,7 +50,7 @@
                     // Check if email exists, if yes then verify password
                     if(mysqli_stmt_num_rows($stmt) == 1){
                         // Bind result variables
-                        mysqli_stmt_bind_result($stmt, $id, $name,$surname, $email, $hashed_password,$second_id,$created_date,$userimage,$category);
+                        mysqli_stmt_bind_result($stmt, $birthday ,$id, $TC_no, $name,$surname,$email, $hashed_password,$second_id,$created_date,$userimage,$category);
                         if(mysqli_stmt_fetch($stmt)){
                           if($password == $hashed_password){
                                 // Password is correct, so start a new session
@@ -59,8 +59,10 @@
                                 // Store data in session variables
                                 $_SESSION["loggedin"] = true;
                                 $_SESSION["id"] = $id;
+                                $_SESSION["TC_no"] = $TC_no;
                                 $_SESSION["name"] = $name;
                                 $_SESSION["surname"] = $surname;
+                                $_SESSION["day_of_birth"] = $birthday;
                                 $_SESSION["email"] = $email;
                                 $_SESSION["second_id"] = $second_id;
                                 $_SESSION["userimage"] = $userimage;

@@ -4,14 +4,50 @@ require_once "connect.php";
 
 
 // Define variables and initialize with empty values
-$name = $surname = $email = $password = $confirm_password = $base64ImgPHP = "";
+$TC_no = $TC_noerr = $date_of_birth = $date_of_birth_err =  $name = $surname = $email = $password = $confirm_password = $base64ImgPHP = "";
 $name_err = $surname_err = $email_err = $password_err = $confirm_password_err = $base64ImgPHP_err = "";
 
+    function karakterDuzelt($yazi){
+     $ara=array("ç","i","ı","ğ","ö","ş","ü");
+     $degistir=array("Ç","İ","I","Ğ","Ö","Ş","Ü");
+     $yazi=str_replace($ara,$degistir,$yazi);
+     $yazi=strtoupper($yazi);
+     return $yazi;
+   }
     // Processing form data when form is submitted
     if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     $base64ImgPHP = $_POST["base64ImgPHP"];
 
+    //Validate TC
+    if(empty(trim($_POST['tcno']))){
+        $TC_noerr = "TC kimlik numarası boş bırakılamaz.";
+      }else{
+        $sql = "SELECT id FROM users WHERE TC_no = ?";
+        if($stmt2 = mysqli_prepare($link, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt2, "s", $param_TC_no);
+
+            // Set parameters
+            $param_TC_no = trim($_POST["tcno"]);
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt2)){
+                /* store result */
+                mysqli_stmt_store_result($stmt2);
+
+                if(mysqli_stmt_num_rows($stmt2) == 1){
+                    $TC_noerr = "Bu TC kimlik numarası ile kayıt mevcut.";
+                } else{
+                    $TC_no = trim($_POST["tcno"]);
+                }
+            } else{
+                echo "Oops! Bi'şeyler ters gitti. Daha sonra tekrar deneyin.";
+            }
+
+            // Close statement
+            mysqli_stmt_close($stmt2);
+        }
+    }
     //Validate name
     if(empty($_POST['name'])){
         $name_err = "İsim boş bırakılamaz.";
@@ -23,6 +59,12 @@ $name_err = $surname_err = $email_err = $password_err = $confirm_password_err = 
         $surname_err = "Soyisim boş bırakılamaz";
     }else{
         $surname = trim($_POST["surname"]);
+    }
+    //Validate birthday
+    if(empty($_POST['birthday'])){
+        $date_of_birth_err = "Doğum tarihi boş bırakılamaz.";
+    }else{
+        $date_of_birth = trim($_POST["birthday"]);
     }
 
     // Validate email
@@ -76,13 +118,63 @@ $name_err = $surname_err = $email_err = $password_err = $confirm_password_err = 
             $confirm_password_err = "Şifreler aynı değil!";
         }
     }
+      $default_date = date('Y-m-d', strtotime($date_of_birth));
 
+          if (isset($_POST['submit'])) {
+            /*
+            Değerler, formu gönder butonu ile birlikte POST edildi ve yakalayıp ilgili değiş-
+            kenlere atadık.
+            */
+            $tcKimlikNo=$_POST['tcno'];
+              /*
+              Ad ve Soyad için türkçe küçük karakter yazılırsa bunu otomatik olarak büyük hale
+              çeviriyoruz (karakterDuzeltme) ve her ihtimale karşın sağında ya da solunda
+              boşluk varsa o kısmı kırpıyoruz(trim()).
+              */
+              $ad = karakterDuzelt(trim($_POST["name"]));
+              $soyad= karakterDuzelt(trim($_POST['surname']));
+              $dogumYili=$_POST['birthday'];
+                /*
+                Bundan sonraki kodları TRY CATCH blogunda yazdıracağız ki herhangi bir hata ol-
+                duğunda bunu yakalayabilelim.
+                */
+                try {
+                /*
+                Değişkenlere atadığımız form verilerini $veriler adında bir diziye aktarıyoruz.
+                */
+                  $veriler = array(
+                    'TCKimlikNo' => $tcKimlikNo,
+                    'Ad' => $ad,
+                    'Soyad' => $soyad,
+                    'DogumYili' => $dogumYili
+                  );
+            /*
+            OOP ile SOAP oluşturarak $baglan adında bir değişkene atıyoruz. Bu sayede
+            tckimlik.nvi.gov.tr üzerinden elimizdeki verileri kullanarak sorgulama yapabile-
+            ceğiz. Eğer php.ini de bulunan extensions'da soap aktif değilse başındaki ";"
+            noktalı virgülü kaldırıp servisi yeniden başlatmanız gerekecektir.
+            */
+            $baglan = new SoapClient("https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?WSDL");
+            $sonuc = $baglan -> TCKimlikNoDogrula ($veriler);
+                // Forma girilen bilgilerin hepsi doğruysa aşağıdaki mesaj
+                if ($sonuc->TCKimlikNoDogrulaResult) {
+
+                }
+              // Bir yada bir kaçtanesi yanlış ise aşağıdaki mesaj son kullanıcıya gösterilir.
+                else {
+                $date_of_birth_err = "Girmiş olduğunuz kimlik bilgileri yanlıştır.";
+                }
+              // Eğer hata oluşursa ekrana yazdırıyoruz.
+              } catch (\Exception $e) {
+               echo $e->faultstring;
+              }
+              }
 
     // Check input errors before inserting in database
-    if(empty($name_err) && empty($surname_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($base64ImgPHP_err)){
+    if(empty($name_err) && empty($surname_err) && empty($email_err) && empty($date_of_birth_err) && empty($TC_noerr) && empty($password_err) && empty($confirm_password_err) && empty($base64ImgPHP_err)){
 
         // Prepare an insert statement
-        $sql = "INSERT INTO users (name,surname,image,category, email, pass) VALUES ('$name','$surname','$base64ImgPHP', '' ,?, ?)";
+        $sql = "INSERT INTO users (TC_no,name,surname,date_of_birth,image,category, email, pass) VALUES ('$TC_no','$name','$surname','$default_date','$base64ImgPHP', '' ,?, ?)";
 
         if($stmt = mysqli_prepare($link, $sql)){
 
@@ -96,7 +188,7 @@ $name_err = $surname_err = $email_err = $password_err = $confirm_password_err = 
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 // Redirect to login page
-                header("location: index.php");
+              //  header("location: index.php");
             } else{
                 echo "Oops! Bi'şeyler ters gitti. Daha sonra tekrar deneyin.";
             }
@@ -143,6 +235,10 @@ $name_err = $surname_err = $email_err = $password_err = $confirm_password_err = 
                     <h3 class="singin-text mb-3">Kayıt ol</h3>
 
                     <form method='post' action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                      <div class="form-group">
+                          <input type="text" name="tcno" maxlength="11" required="required" placeholder="TC Kimlik No" class="form-control <?php echo (!empty($TC_noerr)) ? 'is-invalid' : ''; ?>" value="<?php echo $TC_no; ?>">
+                          <span class="invalid-feedback"><?php echo $TC_noerr; ?></span>
+                      </div>
                         <div class="form-group">
                             <input type="text" name="name" placeholder="İsim" class="form-control <?php echo (!empty($name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $name; ?>">
                             <span class="invalid-feedback"><?php echo $name_err; ?></span>
@@ -150,6 +246,10 @@ $name_err = $surname_err = $email_err = $password_err = $confirm_password_err = 
                         <div class="form-group">
                             <input type="text" name="surname" placeholder="Soyisim" class="form-control <?php echo (!empty($surname_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $surname; ?>">
                             <span class="invalid-feedback"><?php echo $surname_err; ?></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" name="birthday" required="required" placeholder="Doğum Tarihi" class="form-control <?php echo (!empty($date_of_birth_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $date_of_birth; ?>">
+                            <span class="invalid-feedback"><?php echo $date_of_birth_err; ?></span>
                         </div>
                         <div class="form-group">
                             <input type="email" name="email" placeholder="E-mail" class="form-control <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>" >

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 27 Oca 2022, 08:45:42
+-- Üretim Zamanı: 08 Şub 2022, 12:06:51
 -- Sunucu sürümü: 10.4.22-MariaDB
 -- PHP Sürümü: 8.0.13
 
@@ -83,7 +83,8 @@ INSERT INTO `papers` (`paper_id`, `paper_name`, `min_pass_score`, `mark_per_ques
 (1, 'Türkçe 3', 50, 10, 60, '2022-01-18 14:53:00', '2022-01-18 15:53:00', 'Türkçe', '6,7,8,'),
 (2, 'Anayasa 2', 40, 15, 50, '2021-11-23 16:17:00', '2021-11-23 17:17:00', 'Anayasa', '11,12,13,'),
 (3, 'Türkçe 1', 60, 20, 60, '2021-12-30 13:28:00', '2021-12-30 14:28:00', 'Türkçe', '6,7,10,'),
-(12, 'Mat4', 30, 30, 60, '2022-01-17 10:25:00', '2022-01-17 10:31:00', 'Matematik', '11,');
+(12, 'Mat4', 30, 30, 60, '2022-01-17 10:25:00', '2022-01-17 10:31:00', 'Matematik', '11,'),
+(14, 'quiz3', 50, 10, 20, '2022-02-03 12:45:00', '2022-02-03 15:39:00', 'Türkçe', '6,7,8,10,');
 
 -- --------------------------------------------------------
 
@@ -127,7 +128,8 @@ INSERT INTO `questions` (`question_id`, `question`, `answer1`, `answer2`, `answe
 (18, 'Türkiye\'nin iklim özellikleri düşünüldüğünde,\r\n\r\nI. bozkır,\r\n\r\nII. çayır,\r\n\r\nIII. maki,\r\n\r\nIV. orman,\r\n\r\nV. psödomaki\r\n\r\ngibi bitki örtülerinden hangisinin daha geniş alanda görüldüğü söylenebilir?', 'I', 'II', 'III', 'IV', 'V', 0, 'Coğrafya'),
 (19, 'Türkiye\'de kırsal kesimden kentlere doğru gerçekleşen göçlerin nedenleri arasında aşağıdakilerden hangisi yer almaz?', 'Makineli tarımın yaygınlaşması\r\n', 'Tarım arazilerinin miras yoluyla bölünmesi\r\n', 'Kırsal kesimde iş imkânlarının kısıtlı olması\r\n', 'Nüfus artışının hızlı olması\r\n', 'Kırsal kesimde toprak çeşitliliğinin az olması\r\n', 4, 'Coğrafya'),
 (20, 'Geçimini tarım sektöründen sağlayan nüfusun toplam tarım alanlarına bölünmesiyle tarımsal nüfus yoğunluğu bulunur. Türkiye\'de bu yoğunluk bölgelere göre farklılık gösterir.\r\n\r\nBuna göre, bu farklılığı oluşturan nedenler arasında,\r\n\r\nI. yer şekilleri,\r\n\r\nII. tarımla uğraşan nüfusun tarıma bakış açısı,\r\n\r\nIII. tarıma elverişli sahaların yüz ölçümü\r\n\r\nfaktörlerinden hangileri yer almaz?', 'Yalnız I', 'Yalnız II', 'Yalnız III', 'I ve II', 'II ve III', 1, 'Coğrafya'),
-(23, '10-10x10+10=?', '90', '100', '-80', '80', '-120', 2, 'Matematik');
+(23, '10-10x10+10=?', '90', '100', '-80', '80', '-120', 2, 'Matematik'),
+(27, '1', '1', '1', '1', '1', '1', 0, '');
 
 -- --------------------------------------------------------
 
@@ -165,7 +167,8 @@ INSERT INTO `questions_answers` (`Id`, `name`, `surname`, `paper_id`, `paper_nam
 (7, 'Yusuf', 'Coşkun', 2, 'Anayasa 2', 3, '11,12,13,14,', 'A,E,B,D,', 'B,A,C,C,', 'Başarısız', 'Geçersiz', 0, 'Anayasa'),
 (8, 'Çiğdem', 'Aktay', 2, 'Anayasa 2', 5, '11,12,13,14,', 'B,D,BOS,BOS,', 'B,A,C,C,', 'Başarısız', 'Geçerli', 15, 'Anayasa'),
 (9, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'D,E,D,', 'D,E,D,', 'Başarısız', 'Geçersiz', 30, 'Türkçe'),
-(10, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'C,BOS,B,', 'D,E,D,', 'Başarısız', 'Geçersiz', 0, 'Türkçe');
+(10, 'Yusuf', 'Coşkun', 1, 'Türkçe 3', 3, '6,7,8,', 'C,BOS,B,', 'D,E,D,', 'Başarısız', 'Geçersiz', 0, 'Türkçe'),
+(15, 'Çiğdem', 'Aktay', 14, 'quiz3', 5, '6,7,8,10,', 'A,B,B,A,', 'D,E,D,C,', 'Başarısız', 'Geçerli', 0, 'Türkçe');
 
 -- --------------------------------------------------------
 
@@ -175,8 +178,10 @@ INSERT INTO `questions_answers` (`Id`, `name`, `surname`, `paper_id`, `paper_nam
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `TC_no` varchar(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
+  `date_of_birth` date DEFAULT NULL,
   `email` varchar(50) NOT NULL,
   `pass` varchar(255) NOT NULL,
   `second_id` int(11) NOT NULL,
@@ -189,14 +194,14 @@ CREATE TABLE `users` (
 -- Tablo döküm verisi `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `surname`, `email`, `pass`, `second_id`, `created_at`, `image`, `category`) VALUES
-(1, 'Muhammed', 'Ali', 'teacherdemo1@gmail.com', '123456', 1, '2021-10-12 09:53:21', 'http://localhost/exam/upload/pic_20211012085320.jpeg', 'Matematik'),
-(2, 'mehmet ali', 'alabora', 'teacherdemo2@gmail.com', '123456', 1, '2021-10-14 15:16:31', 'http://localhost/exam/upload/pic_20211014141630.jpeg', 'Anayasa,Türkçe'),
-(3, 'Yusuf', 'Coşkun', 'studentdemo1@gmail.com', '123456', 0, '2021-10-27 09:44:47', '', ''),
-(4, 'murat', 'arslan', 'teacherdemo3@gmail.com', '123456', 1, '2021-11-10 16:05:07', 'http://localhost/exam/upload/pic_20211110140506.jpeg', 'Coğrafya,Matematik'),
-(5, 'Çiğdem', 'Aktay', 'studentdemo2@gmail.com', '123456', 0, '2021-11-29 13:41:41', 'http://localhost/exam/upload/pic_20211129114140.jpeg', ''),
-(6, 'Hüseyin', 'Özgümüş', 'studentdemo3@gmail.com', '123456', 0, '2021-11-30 13:40:34', 'http://localhost/exam/upload/pic_20211130114033.jpeg', ''),
-(7, 'rana', 'bilgi', 'rana@gmail.com', '123456', 0, '2022-01-05 14:24:53', 'http://localhost/exam/upload/pic_20220105122448.jpeg', '');
+INSERT INTO `users` (`id`, `TC_no`, `name`, `surname`, `date_of_birth`, `email`, `pass`, `second_id`, `created_at`, `image`, `category`) VALUES
+(1, '0', 'Muhammed', 'Ali', NULL, 'teacherdemo1@gmail.com', '123456', 1, '2021-10-12 09:53:21', 'http://localhost/exam/upload/pic_20211012085320.jpeg', 'Matematik'),
+(2, '0', 'mehmet ali', 'alabora', NULL, 'teacherdemo2@gmail.com', '123456', 1, '2021-10-14 15:16:31', 'http://localhost/exam/upload/pic_20211014141630.jpeg', 'Anayasa,Türkçe'),
+(3, '0', 'Yusuf', 'Coşkun', NULL, 'studentdemo1@gmail.com', '123456', 0, '2021-10-27 09:44:47', '', ''),
+(4, '0', 'murat', 'arslan', NULL, 'teacherdemo3@gmail.com', '123456', 1, '2021-11-10 16:05:07', 'http://localhost/exam/upload/pic_20211110140506.jpeg', 'Coğrafya,Matematik'),
+(5, '0', 'Çiğdem', 'Aktay', NULL, 'studentdemo2@gmail.com', '123456', 0, '2021-11-29 13:41:41', 'http://localhost/exam/upload/pic_20211129114140.jpeg', ''),
+(6, '0', 'Hüseyin', 'Özgümüş', NULL, 'studentdemo3@gmail.com', '123456', 0, '2021-11-30 13:40:34', 'http://localhost/exam/upload/pic_20211130114033.jpeg', ''),
+(54, '50089177018', 'Ramazan', 'KARA', '1995-02-05', 'teacherdemo12525@gmail.com', '123456', 0, '2022-02-08 13:45:48', 'http://localhost/exam/upload/pic_20220208114538.jpeg', '');
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -231,7 +236,8 @@ ALTER TABLE `questions_answers`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `TC_no` (`TC_no`);
 
 --
 -- Dökümü yapılmış tablolar için AUTO_INCREMENT değeri
@@ -247,25 +253,25 @@ ALTER TABLE `logs`
 -- Tablo için AUTO_INCREMENT değeri `papers`
 --
 ALTER TABLE `papers`
-  MODIFY `paper_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `paper_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `questions_answers`
 --
 ALTER TABLE `questions_answers`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
